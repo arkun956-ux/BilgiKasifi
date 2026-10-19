@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software or the pedagogical AI interest center model in your academic research, please cite it as below."
+authors:
+  - family-names: "Sıyrık"
+    given-names: "Behsat Berkay"
+    orcid: "https://orcid.org/0009-0000-0000-0000"
+    affiliation: "Anadolu University, Graduate School of Educational Sciences, Department of Early Childhood Education"
+title: "Bilgi Kâşifi: Preschool AI-Powered Interest Center for Metacognition and Self-Regulated Learning"
+version: 1.0.0
+date-released: 2026-10-19
+url: "https://github.com/arkun956-ux/BilgiKasifi"
+repository-code: "https://github.com/arkun956-ux/BilgiKasifi"
+keywords:
+  - early childhood education
+  - artificial intelligence
+  - metacognition
+  - self-regulated learning
+  - local llm
+  - ollama
+  - gemma 4
+  - child computer interaction
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: "Sıyrık"
+      given-names: "Behsat Berkay"
+  title: "Okul Öncesi Eğitimde Yapay Zekâ Destekli İlgi Merkezi: Bir Model Önerisine Yönelik Nitel Bir İnceleme"
+  conference:
+    name: "9. Uluslararası Okul Öncesi Eğitim Kongresi"
+  year: 2026
+  location: "Türkiye"

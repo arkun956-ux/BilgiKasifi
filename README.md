@@ -2,29 +2,64 @@
 
 > **Erken Çocuklukta Üstbilişsel Düşünme Becerilerini Destekleyen, %100 Çevrim Dışı (Offline / Local-First), Çocuk Güvenliği ve KVKK Uyumlu Yapay Zekâ Kiosk Mimarisi**
 
-[![Vanilla JavaScript](https://img.shields.io/badge/Frontend-Vanilla%20JS%20(ES6%2B)-F7DF1E?logo=javascript&logoColor=black)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Citation](https://img.shields.io/badge/Cite-CITATION.cff-informational)](CITATION.cff)
+[![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20(ES6%2B)-F7DF1E?logo=javascript&logoColor=black)](#)
 [![Local LLM](https://img.shields.io/badge/Local%20LLM-Ollama%20%7C%20Gemma%204%20(8B)-4285F4?logo=google&logoColor=white)](#)
 [![Offline First](https://img.shields.io/badge/Architecture-Local--First%20%7C%20Zero--Backend-10B981)](#)
-[![Web Speech API](https://img.shields.io/badge/Audio-Streaming%20TTS%20%26%20STT-FF6F00)](#)
-[![Web Audio API](https://img.shields.io/badge/Sound-Procedural%20Web%20Audio-9C27B0)](#)
-[![Windows Kiosk](https://img.shields.io/badge/Deployment-Windows%20Kiosk%20(.exe)-0078D6?logo=windows&logoColor=white)](#)
+[![Web Speech API](https://img.shields.io/badge/Speech-Streaming%20TTS%20%26%20STT-FF6F00)](#)
+[![Web Audio API](https://img.shields.io/badge/Audio-Procedural%20Synthesis-9C27B0)](#)
+[![Security Policy](https://img.shields.io/badge/Security-Child%20Safety%20by%20Design-red.svg)](SECURITY.md)
 
 ---
 
-## 📌 1. Proje Özeti ve Pedagojik Felsefe
+## 📖 1. Proje Özeti ve Akademik Künye
 
-**Bilgi Kâşifi**, 4–5 yaş (48–66 ay) okul öncesi çocuklarının soru sorma, merak, strateji geliştirme ve düşünme süreçlerini fark etme (üstbiliş / metacognition) becerilerini desteklemek üzere geliştirilmiş yapay zekâ tabanlı bir öğrenme merkezidir.
+**Bilgi Kâşifi**, 4–5 yaş (48–66 ay) okul öncesi çocuklarının soru sorma, merak, strateji geliştirme ve düşünme süreçlerini fark etme (*üstbiliş / metacognition ve öz-düzenleme*) becerilerini desteklemek üzere geliştirilmiş yapay zekâ tabanlı bir öğrenme merkezidir.
 
-Çocuklar, ekrandaki sevimli ve etkileşimli turuncu tekir kedi maskotuyla sesli veya görsel iletişim kartlarıyla konuşur. Maskot; çocuğun bilişsel düzeyine (Piaget'nin *İşlem Öncesi Dönemi* ve Vygotsky'nin *Yakınsak Gelişim Alanı / İskeleleme*) uygun biçimde **her zaman 3 kurallı cümleyle** yanıt verir:
-1. **1. Cümle (Doğru ve Somut Bilgi):** Çocuğun sorusuna gerçek, bilimsel ve net bilgi sunar.
-2. **2. Cümle (Günlük Hayattan Benzetme):** Çocuğun somut dünyasından bir metafor kurar (ayna, pipet, top, karpuz vb.).
-3. **3. Cümle (Sokratik Merak Sorusu):** *"Peki sence..."* kalıbıyla çocuğu yeni bir tahmine ve bilişötesi düşünmeye yönlendirir.
+* **Araştırmacı & Geliştirici:** **Behsat Berkay Sıyrık** (Anadolu Üniversitesi, Lisansüstü Eğitim Enstitüsü, Okul Öncesi Eğitimi Tezli Yüksek Lisans)
+* **Tez Danışmanı:** **Doç. Dr. Nurbanu Parpucu**
+* **Tez Başlığı:** *"Yapay Zekâ Destekli İlgi Merkezi Modelinin Okul Öncesi Çocuklarının Üstbilişsel Düşünme Becerilerine Etkisi"*
+* **Çalışma Ortamı:** %100 Çevrim Dışı (Offline / Local-First), KVKK ve Çocuk Veri Gizliliğine Tam Uyumlu Kiosk Tablet Mimarisi
 
 ---
 
-## 🏗️ 2. Sistem Mimarisi (Zero-Backend / Local-First SPA)
+## 📚 2. Literatür Temelleri ve Pedagojik Dayanaklar
 
-Uygulama, bulut bağımlılığı olmayan, internet erişimi gerektirmeyen ve harici bir ara katmana (Node.js/Python proxy) ihtiyaç duymayan **Local-First Tek Sayfa Uygulaması (SPA)** mimarisinde geliştirilmiştir.
+Erken çocukluk yazılımlarının başarısı pedagojik kuramlarla doğrudan örtüşmesine bağlıdır. Bilgi Kâşifi projesi şu temel kuramsal çerçeveler üzerine inşa edilmiştir:
+
+1. **Piaget'nin Bilişsel Gelişim Kuramı (İşlem Öncesi Dönem - 1952, 1959):**
+   * 4–5 yaş çocukları soyut kavramları anlamakta zorlanır; bilginin somutlaştırılmasına ve zihinsel benzetmelere ihtiyaç duyar.
+   * *Yansıma:* Modelin her yanıtında yer alan **2. Cümle kuralı**, günlük yaşamdan somut bir benzetme (*ayna, pipet, top, karpuz*) kurar.
+2. **Vygotsky'nin Sosyokültürel Gelişim Kuramı & Yapı İskelesi (ZPD & Scaffolding - 1978):**
+   * Çocuğun tek başına yapamadığı zihinsel sıçramayı, yetkin bir rehberin (yapay zekâ maskotu) sunduğu basamaklı ipuçlarıyla başarması hedeflenir.
+   * *Yansıma:* Çocuk takıldığında arayüzdeki ARASAAC temelli 6 resimli Hızlı Merak Kartı ve modelin yönlendirici karşılaştırma soruları devreye girer.
+3. **Whitebread ve ark. (2009) Bilişötesi ve Öz-Düzenleme Gözlem Çerçevesi (C.H.I.L.D. 3–5):**
+   * Okul öncesi çocuklarda kâğıt-kalem anketleri geçersizdir; bilişötesi düşünme çocuk doğal bir görev başındayken sözel (düşünceyi seslendirme) ve sözel olmayan (duraklama, mimik, düzeltme) davranışlarla ölçülür.
+   * *Yansıma:* Kedi maskotu çocuğun düşünme süresinde patlatılabilir fikir balonları sunar; sistem transkript ve bekleme sürelerini video analizi için zaman damgalı kaydeder.
+4. **Flavell (1979) Üstbiliş Kuramı:**
+   * *Bilişötesi Bilgi (MK)* ve *Bilişötesi Düzenleme (MR)* ayrımı sistemin öğrenme analitiği motoruna (`analyzeAndScore`) doğrudan entegre edilmiştir.
+5. **Lipman (1988, 2003) & Fisher (2007) Çocuklarla Felsefe (P4C):**
+   * Sokratik sorgulama yöntemi benimsenmiş; maskotun 3. cümlesi her zaman *"Peki sence..."* kalıbıyla çocuğu edilgen dinleyicilikten çıkarıp aktif akıl yürütücü konumuna taşır.
+
+---
+
+## 🧩 3. Pedagojiden Koda Eşleme Matrisi (Theory-to-Code Mapping)
+
+| Pedagojik Kuram / Kavram | Hedef Gelişim Alanı | Kod Düzeyindeki Karşılığı | İlgili Dosya / Fonksiyon |
+| :--- | :--- | :--- | :--- |
+| **Somutlaştırma (Piaget)** | Soyut kavramları canlandırma | Sistem İstemi 2. Cümle Kuralı (Günlük hayattan somut benzetme üretimi) | `pedagogicalEngine.js` $\rightarrow$ `getSystemPrompt()` |
+| **Sokratik Merak (P4C / Lipman)** | Tahmin ve akıl yürütme | 3. Cümle: *"Peki sence..."* merak sorusu ile turu çocuğa devretme | `pedagogicalEngine.js` $\rightarrow$ `getFewShotMessages()` |
+| **Sözel Olmayan Düzenleme (Whitebread 2009)** | Düşünme anında bekleme sabrı | Maskotun sağ patisini çeneye götürmesi ve uçan patlatılabilir düşünce balonları | `mascot.js` $\rightarrow$ `startThoughtBubbles()` |
+| **5N1K ve Derinleşme (Flavell)** | Üstbilişsel strateji zenginliği | 80+ kelimelik sözlükle aynı temada ardışık soru sormada **+10 Derinleşme Puanı** | `pedagogicalEngine.js` $\rightarrow$ `analyzeAndScore()` |
+| **İskeleleme / Scaffolding (Vygotsky)** | Okuma-yazma bilmeyen çocuk desteği | ARASAAC açık kaynaklı piktogramlarıyla 6 resimli Hızlı Merak Kartı | `index.html` $\rightarrow$ `.quick-cards-grid` |
+| **Çocuk Güvenliği (UNICEF / KVKK)** | Travmatik içerik koruması | 21 kelimelik kalkan; LLM baypas edilerek şefkatli pedagojik yanıt verilmesi | `pedagogicalEngine.js` $\rightarrow$ `checkSensitiveContent()` |
+
+---
+
+## 🏗️ 4. Sistem Mimarisi (Zero-Backend / Local-First SPA)
+
+Uygulama, bulut bağımlılığı olmayan, internet erişimi gerektirmeyen ve harici bir ara katmana (Node.js/Python FastAPI) ihtiyaç duymayan **Local-First Tek Sayfa Uygulaması (SPA)** mimarisinde geliştirilmiştir:
 
 ```mermaid
 flowchart TD
@@ -59,28 +94,9 @@ flowchart TD
     Storage <-->|JASP / SPSS CSV Veri Çıktısı| Teacher
 ```
 
-### Neden Local-First?
-* **Çocuk Veri Gizliliği (KVKK / COPPA):** Çocukların ses kayıtları veya diyalogları asla harici bulut sunucularına aktarılmaz. Sistem tamamen hava boşluklu (air-gapped / internetsiz) çalışır.
-* **Sıfır Sunucu Gecikmesi (0 ms Latency):** Tarayıcı doğrudan yerel makinedeki Ollama REST API ile konuşarak ağ serileştirme yükünü ortadan kaldırır.
-
 ---
 
-## 💻 3. Modüler Kod Mimarisi
-
-| Dosya | Görev ve Teknik Rolü |
-| :--- | :--- |
-| **`index.html`** | İki sütunlu çocuk dostu arayüz: Sol panelde SVG kedi maskotu, düşünce balonları ve konuşma balonu; sağ panelde ARASAAC piktogramlı 6 adet Hızlı Merak Kartı, sohbet akışı ve mikrofon. |
-| **`app.js`** | `ChildExplorerApp` sınıfı. Web Speech STT/TTS yaşam döngüsü, mesaj geçmişi (`conversationHistory`), maskot durum geçişleri ve streaming seslendirme kuyruğunu yöneten ana orkestratör. |
-| **`ollamaClient.js`** | `OllamaClient` sınıfı. Yerel Ollama `/api/chat` uç noktasıyla `ReadableStream` ve `TextDecoder` üzerinden haberleşir. Cümle bitişlerini (`[.!?\n]`) anlık yakalayarak sesi gecikmesiz üretir. |
-| **`pedagogicalEngine.js`** | `PedagogicalEngine` sınıfı. 3 katmanlı pedagojik istem, 4 çift çok-turlu Few-Shot diyaloğu, 21 kelimelik Kırmızı Çizgi güvenlik filtresi ve 0 ms deterministik puanlama motoru. |
-| **`mascot.js`** | `MascotController` sınıfı. Katmanlı SVG turuncu tekir kedi maskotu. 4 durumlu Sonlu Durum Makinesi (`idle`, `listening`, `thinking`, `speaking`), 130 ms döngülü kesintisiz dudak senkronizasyonu (`startLipSync`) ve patlatılabilir düşünce balonları. |
-| **`soundEngine.js`** | `SoundEngine` sınıfı. Harici `.mp3` veya `.wav` dosyası olmadan Web Audio API osilatörleri ile balon patlatma, ödül fanfarı ve düşünme ışıltısı seslerini matematiksel olarak sentezler. |
-| **`storageService.js`** | `StorageService` sınıfı. Tüm oturumları `localStorage`'da tutar; tek tıkla UTF-8 BOM'lu, KVKK anonimleştirilmiş (`KOD_D_1`) JASP / SPSS uyumlu CSV veri seti üretir. |
-| **`teacherDashboard.js`** | `TeacherDashboard` sınıfı. Öğretmen ve araştırmacı kontrol paneli; Deney/Kontrol grupları, Sınıf İlgi Haritası çubukları ve Kırmızı Çizgi alarmları. |
-
----
-
-## ⚡ 4. Çözülen Kritik Mühendislik Darboğazları
+## ⚡ 5. Çözülen Kritik Mühendislik Darboğazları
 
 ### A. 4 GB VRAM (GTX 1650) Donanımında 8B Gemma 4 Optimizasyonu
 * **Problem:** 8 Milyar parametreli `gemma4:latest` (Q4_K_M, ~9.6 GB) modeli 4 GB VRAM'e sahip sistemde ilk kelimeyi **30–35 saniyede** üretiyordu.
@@ -94,23 +110,15 @@ flowchart TD
 * **Problem:** 4–5 yaş çocuğu cevabın tamamlanması için 6–8 saniye bekletildiğinde dikkatini kaybeder.
 * **Çözüm:** `ollamaClient.js` içinde gelen token akışı biriktirilirken ilk nokta/ünlem (`[.!?\n]`) görüldüğü anda 1. cümle anında seslendirme kuyruğuna alınır. Çocuk ilk cümleyi dinlerken model arka planda 2. ve 3. cümleleri üretmeye devam eder. Algılanan gecikme süresi **1.5 saniyenin altına** düşürülmüştür.
 
-### C. 3 Katmanlı Pedagojik İstem Mühendisliği & Çocuk Güvenliği
-* **Few-Shot Enjeksiyonu:** 8B kuantize modellerde Türkçe çeviri kokan (*calque*) söz dizimi bozukluklarını engellemek için 4 çift kurallı soru-cevap geçmişi isteme dinamik eklenir.
-* **Kırmızı Çizgi Güvenlik Kalkanı:** Çocuğun girdisi LLM'e gitmeden önce 21 kelimelik travmatik/hassas sözlükle taranır; eşleşmede model devreye sokulmaz, önceden onaylanmış şefkatli mesaj okunur ve öğretmene alarm düşer.
+### C. Web Audio API ile Prosedürel Ses Sentezi
+* Harici hiçbir `.mp3` veya `.wav` dosyası indirmeden, `AudioContext` osilatörleri (`sine`, `triangle`) ve frekans modülasyonu ile balon patlatma (`playPop`), ödül fanfarı (`playReward`) ve düşünme ışıltısı sesleri matematiksel olarak sentezlenir.
 
-### D. Sıfır Gecikmeli Deterministik Öğrenme Analitiği Motoru
-* Puanlama ikinci bir LLM'e yaptırılmamış; 0 ms gecikmeyle çalışan kural ve sözlük tabanlı bir JavaScript motoru (`analyzeAndScore`) kodlanmıştır:
-  - **5N1K Sorgulama (+5)**
-  - **Dijital Nezaket (+2)**
-  - **Metafor ve Yaşantı İlişkisi (+8)**
-  - **Bağlamsal Derinleşme (+10):** 8 ana tema ve 80+ anahtar kelimelik sözlük üzerinden aynı konuda ardışık derinleşen soruları tespit eder.
-
-### E. Windows Kiosk Otomasyonu ve İzolasyon
+### D. Windows Kiosk Otomasyonu ve İzolasyon
 * Arka planda açık olan tarayıcı oturumlarının kiosk bayraklarını ezmesini önlemek amacıyla `--user-data-dir="%TEMP%\BilgiKasifiKiosk"` ile izole bir profil sandbox'ı oluşturulmuş; kedi maskotu simgesi çoklu çözünürlüklü `.ico` formatında Windows `.exe` başlatıcısına (`BilgiKasifiBaslat.exe`) gömülmüştür.
 
 ---
 
-## 🚀 5. Kurulum ve Çalıştırma
+## 🚀 6. Kurulum ve Çalıştırma
 
 ### Gereksinimler
 - **İşletim Sistemi:** Windows 10/11
@@ -118,23 +126,43 @@ flowchart TD
 - **Yazılım:** [Ollama](https://ollama.com/)
 
 ### Adım Adım Kurulum
-1. **Modeli İndirin:**
+1. **Depoyu Klonlayın:**
+   ```bash
+   git clone https://github.com/arkun956-ux/BilgiKasifi.git
+   cd BilgiKasifi
+   ```
+2. **Yapay Zekâ Modelini İndirin:**
    ```bash
    ollama pull gemma4:latest
    ```
-2. **Ollama Sunucusunu Başlatın:**
+3. **Ollama Sunucusunu Başlatın:**
    ```bash
    ollama serve
    ```
-3. **Uygulamayı Açın:**
+4. **Uygulamayı Açın:**
    Klasördeki **`BilgiKasifiBaslat.exe`** veya **`Bilgi_Kasifi_Baslat.bat`** dosyasına çift tıklayarak uygulamayı tam ekran kiosk modunda başlatabilirsiniz.
 
 ---
 
-## 👨‍💻 Geliştirici ve Araştırmacı
+## 📜 7. Akademik Atıf (How to Cite)
 
-* **Geliştirici:** **Behsat Berkay Sıyrık**  
-* **Kurum:** Anadolu Üniversitesi, Lisansüstü Eğitim Enstitüsü, Okul Öncesi Eğitimi  
-* **Tez Danışmanı:** Doç. Dr. Nurbanu Parpucu  
-* **Tez Başlığı:** *"Yapay Zekâ Destekli İlgi Merkezi Modelinin Okul Öncesi Çocuklarının Üstbilişsel Düşünme Becerilerine Etkisi"*  
-* **İletişim:** arkun956@gmail.com | [LinkedIn](https://linkedin.com)
+Bu yazılımı veya ilgi merkezi pedagojik modelini akademik çalışmanızda kullanırsanız, lütfen şu şekilde atıfta bulununuz:
+
+### APA 7 Formatı:
+> Sıyrık, B. B. (2026). *Okul Öncesi Eğitimde Yapay Zekâ Destekli İlgi Merkezi: Bir Model Önerisine Yönelik Nitel Bir İnceleme*. 9. Uluslararası Okul Öncesi Eğitim Kongresi, Bildiri Sunumu.
+
+### BibTeX Formatı:
+```bibtex
+@inproceedings{siyrik2026bilgikasifi,
+  author    = {Behsat Berkay S{\i}yr{\i}k},
+  title     = {Okul Öncesi Eğitimde Yapay Zekâ Destekli İlgi Merkezi: Bir Model Önerisine Yönelik Nitel Bir İnceleme},
+  booktitle = {9. Uluslararası Okul Öncesi Eğitim Kongresi},
+  year      = {2026},
+  url       = {https://github.com/arkun956-ux/BilgiKasifi}
+}
+```
+
+---
+
+## 📄 Lisans
+Bu proje [MIT Lisansı](LICENSE) kapsamında açık kaynak olarak yayımlanmıştır.

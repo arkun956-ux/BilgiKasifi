@@ -1,0 +1,39 @@
+{
+  "name": "bilgi-kasifi",
+  "version": "1.0.0",
+  "description": "Erken Çocuklukta Üstbilişsel Düşünme Becerilerini Destekleyen, %100 Çevrim Dışı (Local-First), Çocuk Güvenliği ve KVKK Uyumlu Yapay Zekâ Kiosk Mimarisi",
+  "main": "app.js",
+  "scripts": {
+    "start": "start Bilgi_Kasifi_Baslat.bat",
+    "kiosk": "BilgiKasifiBaslat.exe",
+    "serve": "npx serve -l 5500"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arkun956-ux/BilgiKasifi.git"
+  },
+  "keywords": [
+    "early-childhood-education",
+    "edtech",
+    "artificial-intelligence",
+    "metacognition",
+    "self-regulated-learning",
+    "local-llm",
+    "ollama",
+    "gemma4",
+    "web-speech-api",
+    "web-audio-api",
+    "kiosk",
+    "local-first",
+    "child-computer-interaction"
+  ],
+  "author": "Behsat Berkay Sıyrık <arkun956@gmail.com> (https://github.com/arkun956-ux)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arkun956-ux/BilgiKasifi/issues"
+  },
+  "homepage": "https://github.com/arkun956-ux/BilgiKasifi#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
