@@ -90,7 +90,7 @@ class OllamaClient {
   }
 
   // Gerçek Zamanlı Akış (Streaming) ile Sokratik veya Veda Cevabı Üretme
-  async streamChat({ messages, isFarewell = false, farewellIntent = null, onToken, onSentenceComplete, onDone, onError }) {
+  async streamChat({ messages, isFarewell = false, farewellIntent = null, userQuestion = '', onToken, onSentenceComplete, onDone, onError }) {
     if (this.isGenerating && this.abortController) {
       this.abortController.abort();
     }
@@ -106,12 +106,12 @@ class OllamaClient {
         think: false, // Gemma 4'ün 30 saniyelik içsel düşünme (reasoning) gecikmesini kapatır!
         keep_alive: -1, // Modeli bellekte sıcak tut
         options: {
-          temperature: 0.35,
-          top_p: 0.85,
-          top_k: 25,
-          repeat_penalty: 1.18,
-          num_ctx: 2048, // GTX 1650 VRAM'ine sığması için bağlam penceresi optimizasyonu (4 sn yanıt hızı!)
-          num_predict: isFarewell ? 120 : 260 // Veda modunda 1-2 tatlı cümle, normal modda 2-3 tam kurallı cümle
+          temperature: 0.25, // Düşük sıcaklık: Katı dilbilgisi, devrik cümle yasağı ve sıfır çeviri hatası
+          top_p: 0.80,       // Kaliteli çekirdek örnekleme
+          top_k: 20,         // En olası doğru Türkçe kelime dağarcığı
+          repeat_penalty: 1.22, // Gereksiz tekrarları önler
+          num_ctx: 2048,     // GTX 1650 VRAM optimizasyonu
+          num_predict: isFarewell ? 120 : 260
         }
       };
 
@@ -148,7 +148,7 @@ class OllamaClient {
           }
           if (onSentenceComplete) {
             const cleanedSentence = window.pedagogicalEngine
-              ? window.pedagogicalEngine.cleanResponse(remaining, isFarewell, farewellIntent)
+              ? window.pedagogicalEngine.cleanResponse(remaining, isFarewell, farewellIntent, userQuestion)
               : remaining;
             if (cleanedSentence) {
               onSentenceComplete(cleanedSentence);
@@ -158,7 +158,7 @@ class OllamaClient {
         }
 
         const cleanedFull = window.pedagogicalEngine
-          ? window.pedagogicalEngine.cleanResponse(fullText, isFarewell, farewellIntent)
+          ? window.pedagogicalEngine.cleanResponse(fullText, isFarewell, farewellIntent, userQuestion)
           : fullText;
         if (onDone) onDone(cleanedFull);
       };
@@ -193,7 +193,7 @@ class OllamaClient {
                   sentenceBuffer = match[2] || '';
                   if (onSentenceComplete) {
                     const cleanedSentence = window.pedagogicalEngine
-                      ? window.pedagogicalEngine.cleanResponse(completedPart, isFarewell, farewellIntent)
+                      ? window.pedagogicalEngine.cleanResponse(completedPart, isFarewell, farewellIntent, userQuestion)
                       : completedPart;
                     if (cleanedSentence) {
                       onSentenceComplete(cleanedSentence);

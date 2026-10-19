@@ -772,10 +772,11 @@ class ChildExplorerApp {
       messages,
       isFarewell: farewellCheck.isFarewell,
       farewellIntent: farewellCheck.intent,
+      userQuestion: childQuestion,
       onToken: (token, currentFull) => {
         fullGeneratedResponse = currentFull;
         const cleanText = window.pedagogicalEngine 
-          ? window.pedagogicalEngine.cleanResponse(currentFull, farewellCheck.isFarewell, farewellCheck.intent)
+          ? window.pedagogicalEngine.cleanResponse(currentFull, farewellCheck.isFarewell, farewellCheck.intent, childQuestion)
           : currentFull;
         const textNode = msgElement.querySelector('.message-text');
         if (textNode) {
