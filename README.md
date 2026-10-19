@@ -78,20 +78,20 @@ flowchart TD
 
     subgraph LocalAI["Yerel Yapay Zekâ Motoru (127.0.0.1:11434)"]
         OllamaClient["ollamaClient.js (Streaming NDJSON HTTP Client)"]
-        Gemma4["Ollama Sunucusu — Model: gemma4:latest (8.0B, Q4_K_M)"]
+        Gemma4["Ollama Sunucusu (Model: gemma4:latest 8.0B Q4_K_M)"]
     end
 
-    ChildInput -->|Ses / Metin Girdisi| AppOrch
-    AppOrch -->|1. Hassas İçerik Denetimi| PedEngine
-    PedEngine -->|Güvenli: Sistem İstemi + 4 Few-Shot Çifti| AppOrch
-    AppOrch -->|2. Durum: listening -> thinking| Mascot
-    AppOrch -->|3. POST /api/chat (stream: true, think: false)| OllamaClient
-    OllamaClient <-->|NDJSON Token Akışı| Gemma4
-    OllamaClient -->|onSentenceComplete: Cümle Bazlı TTS Kuyruğu| AppOrch
-    AppOrch -->|4. Durum: speaking (130ms Lip-Sync)| Mascot
-    AppOrch -->|5. onDone: analyzeAndScore()| PedEngine
-    PedEngine -->|Puan, Yıldız, Konu ve Alarmlar| Storage
-    Storage <-->|JASP / SPSS CSV Veri Çıktısı| Teacher
+    ChildInput -->|"Ses veya Metin Girdisi"| AppOrch
+    AppOrch -->|"1. Hassas İçerik Denetimi"| PedEngine
+    PedEngine -->|"Güvenli: Sistem İstemi + 4 Few-Shot Çifti"| AppOrch
+    AppOrch -->|"2. Durum: Dinleme ve Düşünme Geçişi"| Mascot
+    AppOrch -->|"3. POST /api/chat (stream: true)"| OllamaClient
+    OllamaClient <-->|"NDJSON Token Akışı"| Gemma4
+    OllamaClient -->|"onSentenceComplete: Cümle Bazlı TTS Kuyruğu"| AppOrch
+    AppOrch -->|"4. Durum: Konuşma (130ms Lip-Sync)"| Mascot
+    AppOrch -->|"5. onDone: analyzeAndScore()"| PedEngine
+    PedEngine -->|"Puan, Yıldız, Konu ve Alarmlar"| Storage
+    Storage <-->|"JASP / SPSS CSV Veri Çıktısı"| Teacher
 ```
 
 ---
