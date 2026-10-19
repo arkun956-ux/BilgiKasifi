@@ -1,0 +1,1610 @@
+/* ============================================================
+   BİLGİ KAŞİFİ - OKUL ÖNCESİ ÇOCUK DOSTU ARAYÜZ STİLLERİ
+   ============================================================ */
+
+:root {
+  --primary-orange: #FF7043;
+  --secondary-amber: #FFB300;
+  --sky-blue: #E1F5FE;
+  --card-bg: #FFFFFF;
+  --text-main: #37474F;
+  --success-green: #4CAF50;
+  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-bounce: 0 14px 28px rgba(0,0,0,0.12), 0 10px 10px rgba(0,0,0,0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+body {
+  font-family: 'Fredoka', 'Nunito', 'Segoe UI', cursive, sans-serif;
+  background: linear-gradient(135deg, #FFF9C4 0%, #E1F5FE 50%, #FFE0B2 100%);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Üst Başlık ve Skor Çubuğu */
+.app-header {
+  height: auto;
+  min-height: 74px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 3.5px solid #FFE082;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  box-shadow: 0 4px 18px rgba(245, 127, 23, 0.08);
+  z-index: 100;
+  overflow: visible;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: visible;
+}
+
+.brand-badge-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 8px rgba(245, 127, 23, 0.22));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.brand-badge-wrapper:hover {
+  transform: scale(1.1) rotate(4deg);
+}
+
+.brand-badge-svg {
+  display: block;
+}
+
+.brand-text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: visible;
+}
+
+.brand-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: visible;
+  background: linear-gradient(135deg, #E65100 0%, #F57C00 50%, #FFA000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.6px;
+  filter: drop-shadow(0 2px 0 rgba(255, 224, 130, 0.5));
+  margin: 0;
+  padding: 4px 0 2px 0;
+}
+
+.brand-subtitle {
+  font-family: 'Nunito', sans-serif;
+  font-size: 11.5px;
+  color: #795548;
+  font-weight: 700;
+  letter-spacing: 0.35px;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.student-badge-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFF8E1;
+  border: 3px solid #FFD54F;
+  border-radius: 40px;
+  padding: 6px 18px;
+  box-shadow: 0 4px 12px rgba(255, 179, 0, 0.2);
+}
+
+.student-name-label {
+  font-weight: 700;
+  font-size: 16px;
+  color: #BF360C;
+}
+
+.student-level-tag {
+  font-size: 14px;
+  background: #FFE082;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  color: #E65100;
+}
+
+.stars-counter {
+  font-weight: 800;
+  font-size: 18px;
+  color: #F57F17;
+  animation: star-pulse 2s infinite ease-in-out;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-icon-header {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #FFE082;
+  background: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+}
+
+.btn-icon-header:hover {
+  transform: scale(1.1);
+  background: #FFF8E1;
+}
+
+.btn-icon-header.btn-close-app {
+  border-color: #FFCDD2;
+  background: linear-gradient(135deg, #FFF0F0 0%, #FFCDD2 100%);
+  color: #E53935;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.btn-icon-header.btn-close-app:hover {
+  background: linear-gradient(135deg, #EF5350 0%, #D32F2F 100%);
+  color: white;
+  border-color: #D32F2F;
+  box-shadow: 0 4px 14px rgba(229, 57, 53, 0.35);
+  transform: scale(1.12);
+}
+
+/* Ana Düzen (Main Layout) */
+.main-stage {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sol Bölge: Maskot Alanı */
+.mascot-stage {
+  width: 37%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 16px 20px;
+  z-index: 20;
+}
+
+#mascotContainer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mascot-wrapper {
+  position: relative;
+  width: 290px;
+  height: 310px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mascot-svg {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  filter: drop-shadow(0 14px 28px rgba(230, 81, 0, 0.28));
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: visible;
+}
+
+.mascot-glow {
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 179, 0, 0.45) 0%, rgba(255,255,255,0) 70%);
+  z-index: -1;
+  animation: glow-pulse 3s infinite alternate ease-in-out;
+  transition: background 0.5s ease;
+}
+
+/* Dinleme Ses Halkaları (Radar Dalgaları) */
+.listen-rings {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.listen-ring {
+  position: absolute;
+  inset: 0;
+  border: 3px solid rgba(76, 175, 80, 0.5);
+  border-radius: 50%;
+  animation: listen-ring-expand 2.1s infinite ease-out;
+}
+.listen-ring.r2 { animation-delay: 0.7s; }
+.listen-ring.r3 { animation-delay: 1.4s; }
+
+/* Yüzen Çevre Efektleri (Pati, Yıldız, Nota) */
+.mascot-ambient-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.fx-item {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0.75;
+  animation: ambient-float 3.5s infinite ease-in-out;
+}
+.fx-1 { top: 15px; left: 10px; animation-delay: 0s; }
+.fx-2 { top: 35px; right: 8px; animation-delay: 1.2s; }
+.fx-3 { bottom: 60px; left: 5px; animation-delay: 2.4s; }
+
+/* Düşünme Göstergesi (Bulut, Ampul, Çark & Merak Simgesi) */
+.mascot-thinking-badge {
+  position: absolute;
+  top: -24px;
+  right: 10px;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  background: #FFF9C4;
+  border: 3px solid #FBC02D;
+  border-radius: 24px;
+  padding: 6px 14px;
+  box-shadow: 0 8px 20px rgba(251, 192, 45, 0.5);
+  animation: idea-float 1.1s infinite alternate ease-in-out;
+  z-index: 12;
+}
+
+.mascot-thinking-badge .idea-cloud {
+  font-size: 22px;
+}
+
+.mascot-thinking-badge .idea-bulb {
+  font-size: 26px;
+  filter: drop-shadow(0 0 8px #FFEB3B);
+  animation: bulb-glow 0.6s infinite alternate ease-in-out;
+}
+
+.mascot-thinking-badge .idea-gear {
+  font-size: 20px;
+  display: inline-block;
+  animation: gear-spin 2.5s infinite linear;
+}
+
+.mascot-thinking-badge .idea-question {
+  font-size: 20px;
+  font-weight: 900;
+  color: #E65100;
+  animation: question-wiggle 0.8s infinite alternate ease-in-out;
+}
+
+/* Dinleme Göstergesi (Kulak & Ses Dalgaları) */
+.mascot-listening-badge {
+  position: absolute;
+  top: -22px;
+  left: 15px;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: #E8F5E9;
+  border: 3px solid #4CAF50;
+  border-radius: 24px;
+  padding: 6px 14px;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+  animation: listen-float 1s infinite alternate ease-in-out;
+  z-index: 12;
+}
+
+.mascot-listening-badge .ear-icon {
+  font-size: 22px;
+}
+
+.mascot-listening-badge .listen-tag {
+  font-size: 13px;
+  font-weight: 800;
+  color: #2E7D32;
+}
+
+.sound-wave-bars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+}
+
+.sw-bar {
+  width: 4px;
+  height: 8px;
+  background: #43A047;
+  border-radius: 4px;
+  animation: sound-bar-bounce 0.6s infinite ease-in-out;
+}
+.sw-bar:nth-child(2) { animation-delay: 0.15s; height: 16px; }
+.sw-bar:nth-child(3) { animation-delay: 0.3s; height: 12px; }
+.sw-bar:nth-child(4) { animation-delay: 0.45s; height: 18px; }
+
+/* Sol paneldeki konuşma kutusu kaldırıldı; kedi ekranda ferah ve tam gövdesiyle durur */
+.mascot-status-bubble {
+  display: none !important;
+}
+
+/* ============================================================
+   KEDİ JEST VE MİMİK ANİMASYONLARI (TÜM DURUMLARDA CANLI!)
+   ============================================================ */
+
+/* 1. HER ZAMAN AKTİF TEMEL CANLILIK (Nefes, Salınım, Kulak, Bıyık, Kuyruk) */
+.cat-whole-body {
+  transform-origin: 110px 260px;
+  animation: cat-body-sway 4s infinite ease-in-out;
+}
+
+.cat-body-group {
+  transform-origin: 110px 220px;
+  animation: cat-breathe 2.8s infinite ease-in-out;
+}
+
+.cat-tail-group {
+  transform-origin: 140px 210px;
+  animation: cat-tail-wag 2.6s infinite ease-in-out;
+}
+
+.cat-head-group {
+  transform-origin: 110px 145px;
+  animation: cat-head-idle-bob 3.2s infinite ease-in-out;
+}
+
+.cat-ear-left {
+  transform-origin: 62px 75px;
+  animation: cat-ear-twitch 3.5s infinite ease-in-out;
+}
+
+.cat-ear-right {
+  transform-origin: 158px 75px;
+  animation: cat-ear-twitch 3.5s infinite ease-in-out 1.4s;
+}
+
+.cat-whiskers-left {
+  transform-origin: 93px 120px;
+  animation: whisker-wiggle-left 2.4s infinite alternate ease-in-out;
+}
+
+.cat-whiskers-right {
+  transform-origin: 127px 120px;
+  animation: whisker-wiggle-right 2.4s infinite alternate ease-in-out;
+}
+
+.eye-sparkle-major {
+  animation: sparkle-twinkle 1.8s infinite alternate ease-in-out;
+}
+
+/* 2. DİNLİYORUM MODU (Listening): Öne eğilme, baş yatırma, el kulağında */
+.state-listening .cat-whole-body {
+  animation: cat-listen-lean 1.4s infinite alternate ease-in-out;
+}
+
+.state-listening .cat-head-group {
+  animation: cat-head-tilt-listen 1.5s infinite alternate ease-in-out;
+}
+
+.state-listening .cat-ear-left {
+  animation: cat-ear-alert 0.7s infinite alternate ease-in-out;
+}
+
+.state-listening .cat-ear-right {
+  animation: cat-ear-alert 0.7s infinite alternate ease-in-out 0.2s;
+}
+
+.state-listening .cat-arm-right-listening {
+  transform-origin: 152px 150px;
+  animation: cat-ear-cup-pulse 1s infinite alternate ease-in-out;
+}
+
+.state-listening .mascot-glow {
+  background: radial-gradient(circle, rgba(76, 175, 80, 0.55) 0%, rgba(255,255,255,0) 72%);
+}
+
+.state-listening .cat-tail-group {
+  animation: cat-tail-curious 1.2s infinite alternate ease-in-out;
+}
+
+/* 3. DÜŞÜNÜYORUM MODU (Thinking): Pati çeneyi kaşır, baş yukarı bakar */
+.state-thinking .cat-whole-body {
+  animation: cat-think-sway 2.2s infinite alternate ease-in-out;
+}
+
+.state-thinking .cat-head-group {
+  animation: cat-head-think 1.8s infinite alternate ease-in-out;
+}
+
+.state-thinking .cat-arm-right-thinking {
+  transform-origin: 145px 155px;
+  animation: cat-chin-scratch 0.55s infinite alternate ease-in-out;
+}
+
+.state-thinking .mascot-glow {
+  background: radial-gradient(circle, rgba(171, 71, 188, 0.4) 0%, rgba(255, 213, 79, 0.45) 60%, rgba(255,255,255,0) 75%);
+}
+
+.state-thinking .cat-tail-group {
+  animation: cat-tail-think 2s infinite alternate ease-in-out;
+}
+
+/* 4. KONUŞUYORUM MODU (Speaking): İki kol sallanır, neşeli kafa ve kuyruk */
+.state-speaking .cat-whole-body {
+  animation: cat-speak-bounce 0.5s infinite alternate ease-in-out;
+}
+
+.state-speaking .cat-head-group {
+  animation: cat-head-speak 0.4s infinite alternate ease-in-out;
+}
+
+.state-speaking .cat-arm-left-speaking {
+  transform-origin: 68px 150px;
+  animation: cat-arm-wave-left 0.55s infinite alternate ease-in-out;
+}
+
+.state-speaking .cat-arm-right-speaking {
+  transform-origin: 152px 150px;
+  animation: cat-arm-wave-right 0.55s infinite alternate ease-in-out 0.2s;
+}
+
+.state-speaking .cat-tail-group {
+  animation: cat-tail-happy 0.9s infinite alternate ease-in-out;
+}
+
+.state-speaking .mascot-glow {
+  background: radial-gradient(circle, rgba(255, 152, 0, 0.55) 0%, rgba(255,255,255,0) 72%);
+}
+
+/* Boşta El Sallarken Sağ Kol Hareketi */
+.state-idle .cat-arm-right-speaking {
+  transform-origin: 152px 150px;
+  animation: cat-arm-wave-right 0.4s infinite alternate ease-in-out;
+}
+
+.mascot-bounce {
+  animation: cat-jump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Sağ Bölge: Tek ve Ferah Aktif Konuşma Balonu + Dokunmatik Kiosk Alanı */
+.chat-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 28px 16px 0;
+  position: relative;
+  z-index: 20;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 1. TEK VE FERAH "AKTİF KONUŞMA BALONU" */
+.active-speech-card {
+  flex: 1;
+  min-height: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 249, 235, 0.96) 100%);
+  backdrop-filter: blur(10px);
+  border: 5px solid #FFE082;
+  border-radius: 36px;
+  padding: 22px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  box-shadow:
+    0 12px 30px rgba(245, 127, 23, 0.12),
+    0 6px 0 #F2D79E,
+    inset 0 2px 12px rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.active-speech-card::-webkit-scrollbar {
+  display: none;
+}
+
+/* Çocuğun sorduğu son soruyu gösteren zarif üst rozet */
+.active-question-pill {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
+  color: #4E342E;
+  border: 2.5px solid #FFFFFF;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(245, 127, 23, 0.12);
+  max-width: 95%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+.active-question-pill .pill-icon {
+  font-size: 19px;
+}
+
+.active-speech-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.active-speech-body::-webkit-scrollbar {
+  display: none;
+}
+
+.active-speaker-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #E65100;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.active-speaker-tag .speaker-cat-icon {
+  font-size: 22px;
+  background: #FFF3E0;
+  border: 2px solid #FFCC80;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-speech-text {
+  font-family: 'Nunito', 'Fredoka', sans-serif;
+  font-size: 25px;
+  line-height: 1.55;
+  font-weight: 800;
+  color: #4E342E;
+  margin: 0;
+  letter-spacing: 0.2px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.active-speech-text::-webkit-scrollbar {
+  display: none;
+}
+
+.active-speech-text.fade-in {
+  animation: speech-fade-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes speech-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gizli Sohbet Geçmişi Havuzu (Tez Verileri İçin Korunur) */
+.chat-messages-container {
+  display: none;
+}
+
+/* 2. BÜYÜK RESİMLİ DOKUNMATİK "MERAK KARTLARI" (4 Adet Yan Yana) */
+.curiosity-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.curiosity-card {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF7 100%);
+  border: 3.5px solid #FFE082;
+  border-radius: 26px;
+  padding: 10px 10px 12px 10px;
+  height: 138px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #E5D5B5, 0 8px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.curiosity-card:hover {
+  transform: translateY(-3px);
+  background: #FFFDF0;
+  border-color: #FFB300;
+  box-shadow: 0 7px 0 #DEC9A2, 0 12px 20px rgba(245, 127, 23, 0.14);
+}
+
+.curiosity-card:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #E5D5B5, 0 3px 6px rgba(0, 0, 0, 0.05);
+}
+
+.curiosity-card-img-wrap {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(255, 248, 225, 0.85) 0%, rgba(255, 255, 255, 0) 75%);
+  border-radius: 18px;
+  padding: 4px;
+}
+
+.curiosity-card-img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.08));
+  transition: transform 0.2s ease;
+}
+
+.curiosity-card:hover .curiosity-card-img-wrap img {
+  transform: scale(1.07);
+}
+
+.curiosity-card-title {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  color: #BF360C;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.2;
+  padding-top: 4px;
+}
+
+/* 3. ALT PANEL: DEV DOKUNMATİK MİKROFON (Kiosk Ergonomisi) */
+.kiosk-mic-dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.kiosk-mic-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-giant-mic {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  border: 5px solid #FFFFFF;
+  background: linear-gradient(135deg, #FF7043 0%, #F4511E 100%);
+  color: white;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 6px 0 #BF360C,
+    0 10px 24px rgba(244, 81, 30, 0.38);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background 0.25s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.btn-giant-mic:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.btn-giant-mic:active {
+  transform: translateY(4px) scale(0.97);
+  box-shadow:
+    0 2px 0 #BF360C,
+    0 5px 12px rgba(244, 81, 30, 0.3);
+}
+
+.btn-giant-mic.mic-active {
+  background: linear-gradient(135deg, #66BB6A 0%, #2E7D32 100%);
+  box-shadow:
+    0 5px 0 #1B5E20,
+    0 0 0 10px rgba(129, 199, 132, 0.35);
+  animation: pastel-mic-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pastel-mic-pulse {
+  0%, 100% {
+    box-shadow:
+      0 5px 0 #1B5E20,
+      0 0 0 6px rgba(165, 214, 167, 0.55),
+      0 0 0 14px rgba(200, 230, 201, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 5px 0 #1B5E20,
+      0 0 0 14px rgba(165, 214, 167, 0.35),
+      0 0 0 26px rgba(200, 230, 201, 0);
+    transform: scale(1.06);
+  }
+}
+
+.mic-status-hint {
+  font-size: 14px;
+  font-weight: 800;
+  color: #D84315;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3px 14px;
+  border-radius: 999px;
+  border: 2px solid #FFE082;
+}
+
+/* Geliştirici Hızlı Metin Test Girişi (Shift + T ile Açılır/Kapanır) */
+.dev-test-input-bar {
+  width: 100%;
+  max-width: 580px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 3px dashed #FFB300;
+  border-radius: 24px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.child-text-input {
+  flex: 1;
+  border: 2px solid #FFE082;
+  border-radius: 16px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #37474F;
+  outline: none;
+  background: #FFFDE7;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text;
+}
+
+.child-text-input:focus {
+  border-color: #FF7043;
+  background: white;
+}
+
+.btn-send-message {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #42A5F5 0%, #1976D2 100%);
+  color: white;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   DÜŞÜNCE BALONU MİNİ-OYUNU (Wait Animation & Pop Mini-Game)
+   ============================================================ */
+
+.thought-bubbles-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.floating-thought-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(255, 224, 130, 0.7));
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 25px rgba(255, 160, 0, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: floatUp 7s linear forwards, wobble 2s ease-in-out infinite alternate;
+  transition: transform 0.15s;
+}
+
+.floating-thought-bubble:hover {
+  transform: scale(1.15);
+}
+
+.floating-thought-bubble.popping {
+  animation: popScale 0.25s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+@keyframes wobble {
+  0% { margin-left: -20px; }
+  100% { margin-left: 20px; }
+}
+
+@keyframes popScale {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Ödül ve Rozet Toast Bildirimi (Geçici Toast - 3.5 sn sonra kaybolur) */
+.reward-banner {
+  position: fixed;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-24px);
+  opacity: 0;
+  visibility: hidden;
+  background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
+  border: 4px solid white;
+  border-radius: 30px;
+  padding: 12px 28px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #BF360C;
+  box-shadow: 0 15px 35px rgba(255, 179, 0, 0.4);
+  z-index: 200;
+  transition: transform 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.38s ease, visibility 0.38s ease;
+  pointer-events: none;
+}
+
+.reward-banner.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.reward-banner.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-20px);
+}
+
+/* ============================================================
+   ÖĞRETMEN PANELİ MODAL STİLLERİ
+   ============================================================ */
+
+.teacher-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teacher-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 950px;
+  max-height: 88vh;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+
+.teacher-modal-header {
+  padding: 18px 24px;
+  background: #FFF8E1;
+  border-bottom: 2px solid #FFE082;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #8D6E63;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.teacher-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #FAFAFA;
+  border: 2px solid #ECEFF1;
+  border-radius: 18px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 26px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #263238;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #78909C;
+  font-weight: 600;
+}
+
+.teacher-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #ECEFF1;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #78909C;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: #E65100;
+  border-color: #E65100;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.dashboard-table th {
+  background: #F5F5F5;
+  padding: 10px 14px;
+  color: #546E7A;
+  font-weight: 700;
+}
+
+.dashboard-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #ECEFF1;
+  color: #37474F;
+}
+
+.badge-blue {
+  background: #E3F2FD;
+  color: #1976D2;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-gray {
+  background: #ECEFF1;
+  color: #546E7A;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn-select-student {
+  background: #FFE082;
+  border: none;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #BF360C;
+}
+
+.interest-bar-row {
+  margin-bottom: 14px;
+}
+
+.interest-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 700;
+  color: #455A64;
+  margin-bottom: 4px;
+}
+
+.interest-bar-track {
+  width: 100%;
+  height: 14px;
+  background: #ECEFF1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.interest-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFB74D 0%, #FF7043 100%);
+  border-radius: 10px;
+  transition: width 0.6s ease;
+}
+
+.alert-item-box {
+  background: #FFEBEE;
+  border: 2px solid #FFCDD2;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.alert-item-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.alert-pedagogical-tip {
+  margin-top: 8px;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #C62828;
+  border-left: 4px solid #E53935;
+}
+
+.teacher-modal-footer {
+  padding: 16px 24px;
+  background: #FAFAFA;
+  border-top: 2px solid #ECEFF1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 18px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.btn-secondary {
+  background: #ECEFF1;
+  color: #455A64;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 18px;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary-sm {
+  background: #FF7043;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-danger-sm {
+  background: #EF5350;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #CFD8DC;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* ============================================================
+   GENEL ANİMASYONLAR
+   ============================================================ */
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+  70% { box-shadow: 0 0 0 25px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+@keyframes glow-pulse {
+  0% { transform: scale(0.9); opacity: 0.3; }
+  100% { transform: scale(1.15); opacity: 0.7; }
+}
+
+@keyframes bulb-bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+@keyframes bubble-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes mascot-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.02); }
+}
+
+@keyframes mascot-curious {
+  0% { transform: rotate(-3deg) scale(1.03); }
+  100% { transform: rotate(3deg) scale(1.03); }
+}
+
+@keyframes mascot-think {
+  0% { transform: rotate(-5deg); }
+  100% { transform: rotate(-2deg) translateY(-5px); }
+}
+
+@keyframes mascot-speak-bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+@keyframes single-jump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+
+@keyframes star-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ============================================================
+   KEDİ ÖZEL JEST VE MİMİK ANİMASYON KARELERİ
+   ============================================================ */
+
+/* Tüm Vücut Tatlı Salınım (Idle) */
+@keyframes cat-body-sway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(1.2deg) translateY(-2px); }
+  75% { transform: rotate(-1.2deg) translateY(-2px); }
+}
+
+/* Nefes Alma */
+@keyframes cat-breathe {
+  0%, 100% { transform: scale(1, 1) translateY(0); }
+  50% { transform: scale(1.03, 1.02) translateY(-3px); }
+}
+
+/* Boşta Kafa Hafif Oynatma */
+@keyframes cat-head-idle-bob {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  35% { transform: rotate(2deg) translateY(-2px); }
+  70% { transform: rotate(-1.5deg) translateY(-1px); }
+}
+
+/* Kuyruk Sallama (Boşta / Doğal) */
+@keyframes cat-tail-wag {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(10deg); }
+  70% { transform: rotate(-8deg); }
+}
+
+/* Meraklı Dinleme Kuyruğu */
+@keyframes cat-tail-curious {
+  0%, 100% { transform: rotate(3deg); }
+  50% { transform: rotate(16deg); }
+}
+
+/* Düşünceli Kuyruk */
+@keyframes cat-tail-think {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(8deg); }
+}
+
+/* Konuşurken Mutlu Kuyruk */
+@keyframes cat-tail-happy {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(14deg); }
+}
+
+/* Dinlerken Tüm Vücut Öne Eğilme */
+@keyframes cat-listen-lean {
+  0% { transform: scale(1.02) translateY(0); }
+  100% { transform: scale(1.06) translateY(-4px); }
+}
+
+/* Dinlerken Başını Merakla Yana Eğme (Jest) */
+@keyframes cat-head-tilt-listen {
+  0% { transform: rotate(4deg) translateY(-2px); }
+  100% { transform: rotate(10deg) translateY(-5px); }
+}
+
+/* Dinlerken Patiyi Kulağın Arkasında Oynatma */
+@keyframes cat-ear-cup-pulse {
+  0% { transform: rotate(0deg) translateY(0); }
+  100% { transform: rotate(-5deg) translateY(-3px); }
+}
+
+/* Kulak Seğirmesi (Boşta) */
+@keyframes cat-ear-twitch {
+  0%, 75%, 100% { transform: rotate(0deg); }
+  80% { transform: rotate(-6deg); }
+  88% { transform: rotate(8deg); }
+  94% { transform: rotate(-3deg); }
+}
+
+/* Dinlerken Hızlı Kulak Kabartma */
+@keyframes cat-ear-alert {
+  0% { transform: rotate(-3deg) scale(1); }
+  100% { transform: rotate(6deg) scale(1.05); }
+}
+
+/* Bıyık Titreme */
+@keyframes whisker-wiggle-left {
+  0% { transform: rotate(-2deg); }
+  100% { transform: rotate(3deg); }
+}
+
+@keyframes whisker-wiggle-right {
+  0% { transform: rotate(2deg); }
+  100% { transform: rotate(-3deg); }
+}
+
+/* Göz Işıltısı Parlama */
+@keyframes sparkle-twinkle {
+  0% { transform: scale(0.9); opacity: 0.85; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Düşünürken Vücut Salınımı */
+@keyframes cat-think-sway {
+  0% { transform: rotate(-1.5deg); }
+  100% { transform: rotate(1.5deg); }
+}
+
+/* Düşünürken Başını Yukarı Kaldırma (Fikir Arama Mimigi) */
+@keyframes cat-head-think {
+  0% { transform: rotate(-3deg) translateY(-2px); }
+  100% { transform: rotate(-8deg) translateY(-6px); }
+}
+
+/* Düşünürken Sağ Patiyle Çene Kaşıma */
+@keyframes cat-chin-scratch {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-4px) rotate(-4deg); }
+}
+
+/* Konuşurken Vücut Neşeli Zıplama */
+@keyframes cat-speak-bounce {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-5px) scale(1.02); }
+}
+
+/* Konuşurken Neşeli Kafa Oynatma */
+@keyframes cat-head-speak {
+  0% { transform: translateY(0) rotate(-2deg); }
+  100% { transform: translateY(-6px) rotate(3deg); }
+}
+
+/* Konuşurken Sol ve Sağ Kol Sallama (Anlatıcı Jestleri) */
+@keyframes cat-arm-wave-left {
+  0% { transform: rotate(0deg) translateY(0); }
+  100% { transform: rotate(12deg) translateY(-5px); }
+}
+
+@keyframes cat-arm-wave-right {
+  0% { transform: rotate(0deg) translateY(0); }
+  100% { transform: rotate(-14deg) translateY(-6px); }
+}
+
+/* Maskota Tıklayınca Zıplama */
+@keyframes cat-jump {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-28px); }
+  60% { transform: translateY(-32px); }
+}
+
+/* Maskota Tıklayınca / Gıdıklanınca İki Yana Sevimli Kıvrılma (Tickle Wiggle) */
+@keyframes cat-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(-8deg) scale(1.05) translateY(-6px); }
+  35% { transform: rotate(8deg) scale(1.06) translateY(-9px); }
+  55% { transform: rotate(-5deg) scale(1.04) translateY(-4px); }
+  75% { transform: rotate(4deg) scale(1.02) translateY(-2px); }
+}
+
+.mascot-wiggle {
+  animation: cat-wiggle 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* 15 Saniye İşlemsiz Kalınca Merak Uyandıran Canlılık ve Nefes Hareketi (Idle Nudge) */
+@keyframes cat-idle-nudge {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+  25% { transform: translateY(-6px) scale(1.03) rotate(-2.5deg); }
+  50% { transform: translateY(-8px) scale(1.04) rotate(2.5deg); }
+  75% { transform: translateY(-3px) scale(1.01) rotate(-1deg); }
+}
+
+.mascot-idle-nudge {
+  animation: cat-idle-nudge 1.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Fikir Rozeti Yüzme & Işıltı */
+@keyframes idea-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-7px); }
+}
+
+@keyframes bulb-glow {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes gear-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes question-wiggle {
+  0% { transform: rotate(-12deg) scale(0.95); }
+  100% { transform: rotate(15deg) scale(1.1); }
+}
+
+/* Dinleme Rozeti Yüzme & Ses Çubukları */
+@keyframes listen-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
+}
+
+@keyframes sound-bar-bounce {
+  0%, 100% { height: 6px; }
+  50% { height: 18px; }
+}
+
+/* Dinleme Ses Halkaları Yayılma */
+@keyframes listen-ring-expand {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+/* Çevre Süsleri Yüzme */
+@keyframes ambient-float {
+  0%, 100% { transform: translateY(0) rotate(-5deg) scale(0.95); opacity: 0.6; }
+  50% { transform: translateY(-10px) rotate(8deg) scale(1.1); opacity: 0.95; }
+}
+
+/* ============================================================
+   ARASAAC POFUDUK ÇİZGİ FİLM DÜŞÜNCE BULUTU (#thoughtVisualContainer)
+   ============================================================ */
+#thoughtVisualContainer.thought-visual-cloud {
+  position: relative;
+  margin-bottom: -4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 35;
+  opacity: 0;
+  transform: scale(0.55) translateY(14px);
+  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.38s ease;
+}
+
+#thoughtVisualContainer.thought-visual-cloud.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+#thoughtVisualContainer .thought-cloud-body {
+  position: relative;
+  width: 148px;
+  height: 122px;
+  background: radial-gradient(circle at 40% 35%, #FFFFFF 0%, #FFFDF7 78%, #FFF3CD 100%);
+  border: 4.5px solid #FFD54F;
+  border-radius: 62px;
+  box-shadow:
+    0 12px 28px rgba(245, 127, 23, 0.2),
+    0 5px 0 #F2D06B,
+    0 0 0 6px rgba(255, 255, 255, 0.82),
+    inset 0 -5px 12px rgba(255, 213, 79, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  animation: thought-cloud-bob 3.6s ease-in-out infinite;
+}
+
+/* Çizgi Film Bulutu Sol ve Sağ Pofuduk Kabarcıkları */
+#thoughtVisualContainer .thought-cloud-body::before,
+#thoughtVisualContainer .thought-cloud-body::after {
+  content: '';
+  position: absolute;
+  background: #FFFFFF;
+  border: 4px solid #FFD54F;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+#thoughtVisualContainer .thought-cloud-body::before {
+  width: 58px;
+  height: 58px;
+  top: -16px;
+  left: 18px;
+  box-shadow: 0 -4px 10px rgba(245, 127, 23, 0.1);
+}
+
+#thoughtVisualContainer .thought-cloud-body::after {
+  width: 72px;
+  height: 72px;
+  top: -22px;
+  right: 18px;
+  box-shadow: 0 -4px 10px rgba(245, 127, 23, 0.1);
+}
+
+#thoughtVisualContainer #thoughtVisualImg {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  animation: thought-visual-float 2.8s ease-in-out infinite;
+}
+
+#thoughtVisualContainer .thought-cloud-dot {
+  background: #FFFFFF;
+  border: 3.5px solid #FFD54F;
+  border-radius: 50%;
+  box-shadow: 0 3px 0 #F2D06B, 0 5px 10px rgba(245, 127, 23, 0.18);
+}
+
+#thoughtVisualContainer .thought-cloud-dot.dot-lg {
+  width: 18px;
+  height: 18px;
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+#thoughtVisualContainer .thought-cloud-dot.dot-sm {
+  width: 11px;
+  height: 11px;
+  margin-top: 4px;
+  margin-left: 8px;
+}
+
+@keyframes thought-cloud-bob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes thought-visual-float {
+  0%, 100% { transform: translateY(0px) scale(1) rotate(-1.5deg); }
+  50% { transform: translateY(-6px) scale(1.04) rotate(1.5deg); }
+}
+
+

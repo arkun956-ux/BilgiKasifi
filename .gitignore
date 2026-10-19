@@ -1,0 +1,15 @@
+# Bilgi Kâşifi - .gitignore
+
+# Geçici ses kayıtları (TTS cache)
+tts_engine/temp_wav/
+*.wav
+
+# İşletim sistemi ve geçici dosyalar
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+*.log
+
+# İzole tarayıcı önbelleği
+BilgiKasifiKiosk/

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilgi Kaşifi - Okul Öncesi İlgi Merkezi</title>
+  <link rel="icon" type="image/x-icon" href="app_icon.ico">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Düşünce Balonları Katmanı (Mini-Oyun & Bekleme Animasyonu) -->
+  <div id="thoughtBubblesLayer" class="thought-bubbles-layer"></div>
+
+  <!-- Ödül / Rozet Banner'ı (Geçici Toast Bildirimi) -->
+  <div id="rewardBanner" class="reward-banner" style="display: none;">
+    🌟 +5 Yıldız Kazandın!
+  </div>
+
+  <!-- Üst Başlık ve Skor Çubuğu -->
+  <header class="app-header">
+    <div class="brand-section">
+      <!-- Çocuk Kaşif Rozeti (Kedi Kulağı, Pati & Büyüteç Detaylı Özel İllüstrasyon) -->
+      <div class="brand-badge-wrapper" title="Bilgi Kaşifi İlgi Merkezi">
+        <svg viewBox="0 0 48 48" class="brand-badge-svg" width="46" height="46" aria-hidden="true">
+          <defs>
+            <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFA726" />
+              <stop offset="60%" stop-color="#FB8C00" />
+              <stop offset="100%" stop-color="#E65100" />
+            </linearGradient>
+            <linearGradient id="badgeInnerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFF9C4" />
+              <stop offset="100%" stop-color="#FFE082" />
+            </linearGradient>
+            <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#E1F5FE" />
+              <stop offset="100%" stop-color="#81D4FA" />
+            </linearGradient>
+          </defs>
+          
+          <!-- Kedi Kulakları -->
+          <polygon points="11,17 18,7 21,17" fill="#FB8C00" />
+          <polygon points="13,16 18,9 19,16" fill="#FFE082" />
+          <polygon points="37,17 30,7 27,17" fill="#FB8C00" />
+          <polygon points="35,16 30,9 29,16" fill="#FFE082" />
+
+          <!-- Rozet Dış Kalkanı -->
+          <circle cx="24" cy="27" r="17" fill="url(#badgeGrad)" stroke="#FFE082" stroke-width="2.5" />
+          <!-- Rozet İç Dairesi -->
+          <circle cx="24" cy="27" r="13" fill="url(#badgeInnerGrad)" />
+
+          <!-- Büyüteç Camı ve Sevimli Pati Detayı -->
+          <circle cx="22" cy="25" r="7.5" fill="url(#glassGrad)" stroke="#E65100" stroke-width="2" />
+          <!-- Büyüteç Sapı -->
+          <line x1="28" y1="31" x2="35" y2="38" stroke="#BF360C" stroke-width="3" stroke-linecap="round" />
+          <line x1="28" y1="31" x2="35" y2="38" stroke="#FFE082" stroke-width="1.2" stroke-linecap="round" />
+
+          <!-- Mercek İçindeki Kedi Patisi -->
+          <ellipse cx="22" cy="26.5" rx="3" ry="2.2" fill="#E65100" />
+          <circle cx="19.2" cy="23.2" r="1.1" fill="#E65100" />
+          <circle cx="22" cy="22.2" r="1.1" fill="#E65100" />
+          <circle cx="24.8" cy="23.2" r="1.1" fill="#E65100" />
+
+          <!-- Minik Kâşif Işıltısı -->
+          <path d="M 34 16 Q 34 20 37 20 Q 34 20 34 24 Q 34 20 31 20 Q 34 20 34 16 Z" fill="#FFF59D" />
+        </svg>
+      </div>
+
+      <div class="brand-text-block">
+        <h1 class="brand-title">BİLGİ KAŞİFİ</h1>
+        <p class="brand-subtitle">Okul Öncesi Yapay Zekâ İlgi Merkezi</p>
+      </div>
+    </div>
+
+    <!-- Aktif Öğrenci Rozeti & Yıldızlar -->
+    <div class="student-badge-pill">
+      <span id="headerBadgeIcon" class="text-2xl">🥉</span>
+      <span id="headerStudentName" class="student-name-label">Minik Kaşif</span>
+      <span id="headerBadgeName" class="student-level-tag">Başlangıç Kaşifi</span>
+      <span id="headerStarsCount" class="stars-counter">0 ⭐</span>
+      <span id="poppedCounter" class="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded-full">0 🎈</span>
+    </div>
+
+    <!-- Üst Kontrol Butonları -->
+    <div class="header-actions">
+      <button id="btnFullscreen" class="btn-icon-header" title="Tam Ekran">⛶</button>
+      <button id="btnTeacherPanel" class="btn-icon-header" title="Öğretmen ve Araştırmacı Paneli">🔒</button>
+      <button id="btnCloseApp" class="btn-icon-header btn-close-app" title="Uygulamayı Kapat" onclick="closeApplication()">⏻</button>
+    </div>
+  </header>
+
+  <!-- Ana Sahne -->
+  <main class="main-stage">
+    
+    <!-- Sol Bölge: Etkileşimli Maskot Alanı -->
+    <section class="mascot-stage">
+      <!-- ARASAAC Pofuduk Düşünce Bulutu (Kedi Konuşurken Anlık Kavram Görseli) -->
+      <div id="thoughtVisualContainer" class="thought-visual-cloud visible" aria-hidden="true">
+        <div class="thought-cloud-body">
+          <img id="thoughtVisualImg" src="assets/arasaac/welcome.png" alt="Kavram Piktogramı" />
+        </div>
+        <span class="thought-cloud-dot dot-lg"></span>
+        <span class="thought-cloud-dot dot-sm"></span>
+      </div>
+
+      <div id="mascotContainer"></div>
+    </section>
+
+    <!-- Sağ Bölge: Tek ve Ferah Aktif Konuşma Balonu + Dokunmatik Kiosk Alanı -->
+    <section class="chat-stage">
+
+      <!-- 1. TEK VE FERAH AKTİF KONUŞMA BALONU -->
+      <div id="activeSpeechBubble" class="active-speech-card">
+        <div id="activeQuestionBadge" class="active-question-pill" style="display: none;">
+          <span class="pill-icon">🧒</span>
+          <span id="activeQuestionText"></span>
+        </div>
+        <div class="active-speech-body">
+          <div class="active-speaker-tag">
+            <span class="speaker-cat-icon">🐱</span>
+            <span>Bilgi Kâşifi</span>
+          </div>
+          <p id="activeSpeechText" class="active-speech-text fade-in">
+            Miyav! Merhaba minik kaşif! Ben senin merak arkadaşın Bilgi Kaşifi! Dünyadaki canlıları, gökyüzünü, dinozorları veya merak ettiğin her şeyi bana sorabilirsin. Mikrofona basıp konuşman yeterli! 🐾✨
+          </p>
+        </div>
+      </div>
+
+      <!-- Arka Plan Konuşma Geçmişi Havuzu (Tez Verileri İçin Korunur, Çocuk Ekranında Gizlidir) -->
+      <div id="chatMessages" class="chat-messages-container" style="display: none;" aria-hidden="true"></div>
+
+      <!-- 2. BÜYÜK RESİMLİ DOKUNMATİK "MERAK KARTLARI" (4 Adet Yan Yana) -->
+      <div class="curiosity-cards-grid">
+        <button class="quick-topic-btn curiosity-card" data-prompt="Dinozorlar neden artık yaşamıyor?">
+          <div class="curiosity-card-img-wrap">
+            <img src="assets/arasaac/2738.png" alt="Dinozorlar" />
+          </div>
+          <span class="curiosity-card-title">🦖 Dinozorlar</span>
+        </button>
+
+        <button class="quick-topic-btn curiosity-card" data-prompt="Uzayda yıldızlar ve gezegenler nasıl durur?">
+          <div class="curiosity-card-img-wrap">
+            <img src="assets/arasaac/2344.png" alt="Uzay ve Yıldızlar" />
+          </div>
+          <span class="curiosity-card-title">🚀 Uzay ve Yıldızlar</span>
+        </button>
+
+        <button class="quick-topic-btn curiosity-card" data-prompt="Gökkuşağı nasıl oluşur?">
+          <div class="curiosity-card-img-wrap">
+            <img src="assets/arasaac/2986.png" alt="Doğa ve Renkler" />
+          </div>
+          <span class="curiosity-card-title">🌈 Doğa ve Renkler</span>
+        </button>
+
+        <button class="quick-topic-btn curiosity-card" data-prompt="Balinalar ve balıklar suyun altında nasıl nefes alır?">
+          <div class="curiosity-card-img-wrap">
+            <img src="assets/arasaac/2268.png" alt="Deniz Canlıları" />
+          </div>
+          <span class="curiosity-card-title">🐳 Deniz Canlıları</span>
+        </button>
+      </div>
+
+      <!-- 3. ALT PANEL: DEV DOKUNMATİK MİKROFON (Kiosk Ergonomisi) -->
+      <div class="kiosk-mic-dock">
+        <div class="kiosk-mic-center">
+          <button id="btnMic" class="btn-giant-mic" title="Konuşmak İçin Dokun">
+            <span class="mic-emoji">🎙️</span>
+          </button>
+          <span id="micStatusLabel" class="mic-status-hint">Konuşmak İçin Dokun</span>
+        </div>
+
+        <!-- Geliştirici Hızlı Metin Test Girişi (Varsayılan Gizli, Shift + T ile Açılır/Kapanır) -->
+        <div id="devTestInputBar" class="dev-test-input-bar" style="display: none;">
+          <input 
+            type="text" 
+            id="childInput" 
+            class="child-text-input" 
+            placeholder="[Geliştirici Testi - Shift+T] Soru veya ifade yaz..."
+            autocomplete="off"
+          />
+          <button id="btnSend" class="btn-send-message" title="Gönder">
+            ➤
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- JavaScript Dosyaları -->
+  <script src="soundEffects.js"></script>
+  <script src="pedagogicalEngine.js"></script>
+  <script src="assets/arasaac/arasaac_tr_index.js"></script>
+  <script src="visualEngine.js"></script>
+  <script src="storageService.js"></script>
+  <script src="ollamaClient.js"></script>
+  <script src="mascot.js"></script>
+  <script src="teacherDashboard.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
