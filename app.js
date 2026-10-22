@@ -854,7 +854,7 @@ class ChildExplorerApp {
 
           if (scoring.scoreDelta >= 5) {
             if (window.soundEngine) window.soundEngine.playReward();
-            this.mascot.triggerHappyEyes(1200);
+            this.mascot.celebrate(3000);
             this.showRewardBadge(scoring.details[0]?.label || `+${scoring.scoreDelta} Yıldız!`);
           }
         }

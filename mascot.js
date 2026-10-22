@@ -7,7 +7,8 @@ class MascotController {
   constructor(containerId, bubbleContainerId) {
     this.container = document.getElementById(containerId);
     this.bubbleContainer = document.getElementById(bubbleContainerId);
-    this.state = 'idle'; // idle | listening | thinking | speaking
+    this.state = 'idle'; // idle | listening | thinking | speaking | celebrating
+    this.mascotMode = localStorage.getItem('bilgi_kasifi_mascot_mode') || 'model'; // 'model' (3D AI Üretimi) veya 'vector' (SVG)
     this.poppedBubblesCount = 0;
     this.bubbleInterval = null;
     this.speechInterval = null;
@@ -33,11 +34,19 @@ class MascotController {
     this.startIdleInactivityTracker();
   }
 
-  // Sevimli Turuncu Tekir Kedi Maskotunun Zengin Katmanlı SVG Çizimi
+  // Sevimli Turuncu Tekir Kedi Maskotunun 3D Model ve Zengin Katmanlı SVG Çizimi
   renderMascot() {
     if (!this.container) return;
 
+    const isModelMode = this.mascotMode === 'model';
+
     this.container.innerHTML = `
+      <!-- Maskot Görünüm Seçici (3D Model / Vektör) -->
+      <div class="mascot-mode-toggle" id="mascotModeToggle">
+        <button type="button" class="mode-pill ${isModelMode ? 'active' : ''}" id="btnModelMascot" title="3D Yapay Zekâ Model Maskotu">🎨 3D Model</button>
+        <button type="button" class="mode-pill ${!isModelMode ? 'active' : ''}" id="btnVectorMascot" title="Vektör Çizim Maskot">✏️ Vektör</button>
+      </div>
+
       <div class="mascot-wrapper state-idle" id="mascotMain">
         <!-- Arka Plan Işık Halesi -->
         <div class="mascot-glow" id="mascotGlow"></div>
@@ -76,7 +85,17 @@ class MascotController {
           <span class="listen-tag">Dinliyorum!</span>
         </div>
 
-        <svg viewBox="0 0 240 280" class="mascot-svg" id="mascotSvg">
+        <!-- 1. MODEL MASKOT SAHNESİ (Yapay Zekâ ile Üretilen 3D Disney/Pixar Karakter Seti) -->
+        <div class="mascot-model-stage ${isModelMode ? 'active' : 'hidden'}" id="mascotModelStage" style="${isModelMode ? '' : 'display:none;'}">
+          <img src="assets/mascot/cat_idle.png" class="model-pose pose-idle active" id="modelPoseIdle" alt="Bilgi Kâşifi Boşta" draggable="false" />
+          <img src="assets/mascot/cat_listening.png" class="model-pose pose-listening" id="modelPoseListening" alt="Bilgi Kâşifi Dinliyor" draggable="false" />
+          <img src="assets/mascot/cat_thinking.png" class="model-pose pose-thinking" id="modelPoseThinking" alt="Bilgi Kâşifi Düşünüyor" draggable="false" />
+          <img src="assets/mascot/cat_speaking.png" class="model-pose pose-speaking" id="modelPoseSpeaking" alt="Bilgi Kâşifi Konuşuyor" draggable="false" />
+          <img src="assets/mascot/cat_celebrating.png" class="model-pose pose-celebrating" id="modelPoseCelebrating" alt="Bilgi Kâşifi Kutluyor" draggable="false" />
+        </div>
+
+        <!-- 2. VEKTÖR SVG MASKOT ÇİZİMİ (Klasik Mod) -->
+        <svg viewBox="0 0 240 280" class="mascot-svg" id="mascotSvg" style="${isModelMode ? 'display:none;' : ''}">
           <defs>
             <!-- Göz İris Gradyanı (Işıltılı Kehribar/Bal Rengi) -->
             <radialGradient id="catEyeGrad" cx="45%" cy="40%" r="65%">
@@ -351,6 +370,95 @@ class MascotController {
         handleTickle();
       }, { passive: true });
     }
+
+    // Maskot Görünüm Seçici Butonları (3D Model / Vektör)
+    const btnModel = document.getElementById('btnModelMascot');
+    const btnVector = document.getElementById('btnVectorMascot');
+    if (btnModel) {
+      btnModel.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.setMascotMode('model');
+        if (window.soundEngine && window.soundEngine.playPop) window.soundEngine.playPop();
+      });
+    }
+    if (btnVector) {
+      btnVector.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.setMascotMode('vector');
+        if (window.soundEngine && window.soundEngine.playPop) window.soundEngine.playPop();
+      });
+    }
+  }
+
+  // ── 3D MODEL MASKOT VE VEKTÖR GEÇİŞ YÖNETİMİ ───────────────
+  setMascotMode(mode) {
+    this.mascotMode = mode;
+    try {
+      localStorage.setItem('bilgi_kasifi_mascot_mode', mode);
+    } catch (e) {}
+
+    const modelStage = document.getElementById('mascotModelStage');
+    const svgStage = document.getElementById('mascotSvg');
+    const btnModel = document.getElementById('btnModelMascot');
+    const btnVector = document.getElementById('btnVectorMascot');
+
+    if (mode === 'model') {
+      if (modelStage) {
+        modelStage.style.display = 'flex';
+        modelStage.classList.remove('hidden');
+        modelStage.classList.add('active');
+      }
+      if (svgStage) svgStage.style.display = 'none';
+      if (btnModel) btnModel.classList.add('active');
+      if (btnVector) btnVector.classList.remove('active');
+    } else {
+      if (modelStage) {
+        modelStage.style.display = 'none';
+        modelStage.classList.remove('active');
+        modelStage.classList.add('hidden');
+      }
+      if (svgStage) svgStage.style.display = 'block';
+      if (btnModel) btnModel.classList.remove('active');
+      if (btnVector) btnVector.classList.add('active');
+    }
+
+    this.updateModelPose(this.state);
+  }
+
+  updateModelPose(state) {
+    const poses = {
+      idle: document.getElementById('modelPoseIdle'),
+      listening: document.getElementById('modelPoseListening'),
+      thinking: document.getElementById('modelPoseThinking'),
+      speaking: document.getElementById('modelPoseSpeaking'),
+      celebrating: document.getElementById('modelPoseCelebrating'),
+      sleep: document.getElementById('modelPoseIdle')
+    };
+
+    const target = poses[state] || poses.idle;
+    Object.values(poses).forEach(img => {
+      if (img) img.classList.remove('active');
+    });
+    if (target) {
+      target.classList.add('active');
+    }
+  }
+
+  // Başarı, Doğru Cevap veya Rozet Kutlama Hareketi
+  celebrate(durationMs = 2800) {
+    const prevState = (this.state === 'celebrating' || this.state === 'sleep') ? 'idle' : this.state;
+    this.setState('celebrating', 'Harika bir keşif! Çok güzel bir soru sordun! 🌟🎉');
+    this.bounce();
+    if (window.soundEngine && window.soundEngine.playReward) {
+      window.soundEngine.playReward();
+    }
+    this.triggerHappyEyes(durationMs);
+
+    setTimeout(() => {
+      if (this.state === 'celebrating') {
+        this.setState(prevState);
+      }
+    }, durationMs);
   }
 
   // ── DURUM DEĞİŞTİRME & JEST/MİMİK YÖNETİMİ ─────────────────
@@ -383,8 +491,11 @@ class MascotController {
     if (!wrapper) return;
 
     // CSS Sınıflarını Güncelle
-    wrapper.classList.remove('state-idle', 'state-listening', 'state-thinking', 'state-speaking');
+    wrapper.classList.remove('state-idle', 'state-listening', 'state-thinking', 'state-speaking', 'state-celebrating');
     wrapper.classList.add(`state-${newState}`);
+
+    // Model maskot pozunu güncelle
+    this.updateModelPose(newState);
 
     // Rozetleri Sıfırla
     if (bulb) bulb.style.display = 'none';
@@ -779,6 +890,13 @@ class MascotController {
 
   bounce() {
     const wrapper = document.getElementById('mascotMain');
+    const modelStage = document.getElementById('mascotModelStage');
+    if (modelStage && this.mascotMode === 'model') {
+      modelStage.classList.remove('is-bouncing', 'is-wiggling');
+      void modelStage.offsetWidth;
+      modelStage.classList.add('is-bouncing');
+      setTimeout(() => modelStage.classList.remove('is-bouncing'), 650);
+    }
     if (wrapper) {
       wrapper.classList.remove('mascot-bounce', 'mascot-wiggle');
       void wrapper.offsetWidth;
@@ -790,6 +908,13 @@ class MascotController {
   // Gıdıklanınca İki Yana Sevimli Kıvrılma (Wiggle)
   wiggle() {
     const wrapper = document.getElementById('mascotMain');
+    const modelStage = document.getElementById('mascotModelStage');
+    if (modelStage && this.mascotMode === 'model') {
+      modelStage.classList.remove('is-bouncing', 'is-wiggling');
+      void modelStage.offsetWidth;
+      modelStage.classList.add('is-wiggling');
+      setTimeout(() => modelStage.classList.remove('is-wiggling'), 850);
+    }
     if (wrapper) {
       wrapper.classList.remove('mascot-bounce', 'mascot-wiggle', 'mascot-idle-nudge');
       void wrapper.offsetWidth;
