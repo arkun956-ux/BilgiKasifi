@@ -419,6 +419,20 @@ body {
   will-change: transform;
 }
 
+/* Kaşlar İçin Chromium SVG Transform-Box & Transform-Origin Düzeltmesi (Göz İçine Kaymayı Önler) */
+.cat-eyebrows,
+.eyebrow,
+.cat-brow-left,
+.cat-brow-right,
+.eyebrow-left,
+.eyebrow-right,
+#catBrowLeft,
+#catBrowRight {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+
 /* Kedi Dokunmatik Bölgeleri (Kafa, Karın, Burun) */
 .cat-head-part,
 .cat-body-part,

@@ -278,9 +278,9 @@ class MascotController {
               <path d="M 165 110 Q 153 112 145 108" stroke="#B84407" stroke-width="4" stroke-linecap="round" fill="none"/>
 
               <!-- HAREKETLİ KAŞLAR (Mimiklere Göre İnip Kalkan Kaşlar) -->
-              <g id="catEyebrows" class="cat-eyebrows">
-                <path id="catBrowLeft" class="cat-brow-left" d="M 74 74 Q 86 68 96 74" stroke="#9A3404" stroke-width="4" stroke-linecap="round" fill="none"/>
-                <path id="catBrowRight" class="cat-brow-right" d="M 124 74 Q 134 68 146 74" stroke="#9A3404" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <g id="catEyebrows" class="cat-eyebrows eyebrow">
+                <path id="catBrowLeft" class="cat-brow-left eyebrow-left" d="M 74 68 Q 86 60 96 68" stroke="#9A3404" stroke-width="4" stroke-linecap="round" fill="none"/>
+                <path id="catBrowRight" class="cat-brow-right eyebrow-right" d="M 124 68 Q 134 60 146 68" stroke="#9A3404" stroke-width="4" stroke-linecap="round" fill="none"/>
               </g>
 
               <!-- 7. GÖZLER (İri, Işıltılı, 30 FPS Kare Kare Kırpan & Yön Değiştiren) -->
@@ -1315,10 +1315,10 @@ class MascotController {
       pupilRight.setAttribute('ry', '14');
     }
 
-    // Kaşları Normal Konuma Al
+    // Kaşları Normal Konuma Al (Göz Üstü Emniyetli Yükseklik)
     if (browLeft && browRight) {
-      browLeft.setAttribute('d', 'M 74 74 Q 86 68 96 74');
-      browRight.setAttribute('d', 'M 124 74 Q 134 68 146 74');
+      browLeft.setAttribute('d', 'M 74 68 Q 86 60 96 68');
+      browRight.setAttribute('d', 'M 124 68 Q 134 60 146 68');
     }
 
     // Ağızları Varsayılana Getir
@@ -1347,8 +1347,8 @@ class MascotController {
       }
 
       if (browLeft && browRight) {
-        browLeft.setAttribute('d', 'M 74 76 Q 86 73 96 77');
-        browRight.setAttribute('d', 'M 124 70 Q 134 62 146 70');
+        browLeft.setAttribute('d', 'M 74 70 Q 86 64 96 70');
+        browRight.setAttribute('d', 'M 124 64 Q 134 56 146 64');
       }
 
       if (mouthClosed) mouthClosed.style.display = 'none';
@@ -1380,8 +1380,8 @@ class MascotController {
       }
 
       if (browLeft && browRight) {
-        browLeft.setAttribute('d', 'M 73 69 Q 86 61 97 69');
-        browRight.setAttribute('d', 'M 123 69 Q 134 61 147 69');
+        browLeft.setAttribute('d', 'M 73 64 Q 86 56 97 64');
+        browRight.setAttribute('d', 'M 123 64 Q 134 56 147 64');
       }
 
       if (mouthClosed) mouthClosed.style.display = 'none';
@@ -1403,8 +1403,8 @@ class MascotController {
       if (armRightSpeaking) armRightSpeaking.style.display = 'block';
 
       if (browLeft && browRight) {
-        browLeft.setAttribute('d', 'M 74 71 Q 86 64 96 71');
-        browRight.setAttribute('d', 'M 124 71 Q 134 64 146 71');
+        browLeft.setAttribute('d', 'M 74 66 Q 86 58 96 66');
+        browRight.setAttribute('d', 'M 124 66 Q 134 58 146 66');
       }
 
       if (customText && statusText) statusText.innerText = customText;
@@ -1427,8 +1427,8 @@ class MascotController {
       if (armRightCelebration) armRightCelebration.style.display = 'block';
 
       if (browLeft && browRight) {
-        browLeft.setAttribute('d', 'M 74 68 Q 86 60 96 68');
-        browRight.setAttribute('d', 'M 124 68 Q 134 60 146 68');
+        browLeft.setAttribute('d', 'M 74 63 Q 86 55 96 63');
+        browRight.setAttribute('d', 'M 124 63 Q 134 55 146 63');
       }
 
       const happyLeft = document.getElementById('happyEyeLeft');
@@ -1482,14 +1482,16 @@ class MascotController {
 
     if (leftHalf) leftHalf.style.display = 'none';
     if (rightHalf) rightHalf.style.display = 'none';
-    if (lidLeft) lidLeft.style.display = 'none';
-    if (lidRight) lidRight.style.display = 'none';
+    if (lidLeft) lidLeft.style.display = 'block';
+    if (lidRight) lidRight.style.display = 'block';
     if (happyLeft) happyLeft.style.display = 'block';
     if (happyRight) happyRight.style.display = 'block';
 
     setTimeout(() => {
       if (happyLeft) happyLeft.style.display = 'none';
       if (happyRight) happyRight.style.display = 'none';
+      if (lidLeft && this.state !== 'sleep') lidLeft.style.display = 'none';
+      if (lidRight && this.state !== 'sleep') lidRight.style.display = 'none';
     }, durationMs);
   }
 
