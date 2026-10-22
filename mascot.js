@@ -1,6 +1,7 @@
 // ============================================================
 // Etkileşimli Animasyonlu Kedi Maskotu ("Bilgi Kaşifi")
 // 30 FPS Kare Kare (Frame-by-Frame) Çizgi Film Animasyon Motoru
+// Kafa Okşama, Karın Gıdıklama, Burun Dokunma & Zengin Bekleme Döngüsü
 // ============================================================
 
 class MascotController {
@@ -26,7 +27,6 @@ class MascotController {
       "Hemen anlatmak için sabırsızlanıyorum... 🌟"
     ];
     this.phraseIndex = 0;
-    this.idleInactivityTimer = null;
 
     // 30 FPS Motoru Durum Değişkenleri
     this.animRafId = null;
@@ -46,6 +46,16 @@ class MascotController {
 
     this.speechMouthFrame = 0;
     this.targetGaze = null;
+
+    // Baş ve Gövde Geçici Animasyon Override (Kafa Okşama, Mırıldanma vb.)
+    this.activeHeadOverride = null;
+    this.activeBodyOverride = null;
+    this.isHappyPetActive = false;
+
+    // 15 Saniye İşlemsiz Bekleme Durumu (Idle Micro-Animations)
+    this.idleInactivityTimer = null;
+    this.idleAnimIndex = 0;
+    this.activeIdleMicroAnim = null;
 
     this.renderMascot();
     this.showVisual('assets/arasaac/welcome.png');
@@ -128,7 +138,7 @@ class MascotController {
           <g id="catWholeBody" class="cat-whole-body">
 
             <!-- 2. KUYRUK (30 FPS Canlı Sallanan Tüylü Kuyruk) -->
-            <g id="mascotTailGroup" class="cat-tail-group">
+            <g id="mascotTailGroup" class="cat-tail-group cat-interactive-part">
               <path id="catTailPath" d="M 135 210 Q 188 225 202 172 Q 216 120 182 82 Q 165 62 154 78 Q 146 95 168 118 Q 186 142 144 195 Z" fill="url(#catFurGrad)"/>
               <!-- Kuyruk Tekir Çizgileri -->
               <path d="M 176 142 Q 186 150 192 160" stroke="#B84407" stroke-width="6" stroke-linecap="round" fill="none"/>
@@ -153,8 +163,8 @@ class MascotController {
               </g>
             </g>
 
-            <!-- 4. GÖVDE & KARIN (30 FPS Nefes Alan ve Esneyen Gövde) -->
-            <g id="mascotBody" class="cat-body-group">
+            <!-- 4. GÖVDE & KARIN (Gıdıklama Bölgesi & 30 FPS Nefes Alan Esneyen Gövde) -->
+            <g id="mascotBody" class="cat-body-group cat-body-part cat-interactive-part">
               <!-- Ana Gövde Şekli -->
               <path d="M 68 140 Q 52 185 64 228 Q 80 240 110 240 Q 140 240 156 228 Q 168 185 152 140 Z" fill="url(#catFurGrad)"/>
               
@@ -164,8 +174,16 @@ class MascotController {
               <path d="M 162 175 Q 150 178 142 174" stroke="#B84407" stroke-width="5" stroke-linecap="round" fill="none"/>
               <path d="M 161 195 Q 148 198 140 193" stroke="#B84407" stroke-width="5" stroke-linecap="round" fill="none"/>
 
-              <!-- Sevimli Krem Göbek Ovali -->
-              <ellipse cx="110" cy="192" rx="32" ry="36" fill="url(#catBellyGrad)"/>
+              <!-- Sevimli Krem Göbek Ovali (Gıdıklanınca Titreyen Bölge) -->
+              <ellipse id="catBellyOval" cx="110" cy="192" rx="32" ry="36" fill="url(#catBellyGrad)"/>
+            </g>
+
+            <!-- 4.1 İZCİ BANDANASI & YILDIZ ROZETİ (Meraklı Kâşif Fuları) -->
+            <g id="mascotBandana" class="cat-bandana">
+              <path d="M 72 142 Q 110 162 148 142 Q 135 158 110 168 Q 85 158 72 142 Z" fill="#00897B"/>
+              <path d="M 98 163 L 110 182 L 122 163 Z" fill="#00796B"/>
+              <circle cx="110" cy="160" r="7" fill="#FFD54F" stroke="#FFA000" stroke-width="1.5"/>
+              <path d="M 110 155 L 111.5 158.5 L 115 159 L 112.5 161.5 L 113 165 L 110 163 L 107 165 L 107.5 161.5 L 105 159 L 108.5 158.5 Z" fill="#FF8F00"/>
             </g>
 
             <!-- 5. KOLLAR & PATİLER (Kare Kare Jest Modları) -->
@@ -225,16 +243,21 @@ class MascotController {
               <path d="M 169 67 L 167 63 M 174 65 L 174 60 M 179 66 L 181 62" stroke="#B84407" stroke-width="2" stroke-linecap="round"/>
             </g>
 
-            <!-- 6. KAFA GRUBU (30 FPS Eğilip Bükülebilen, Mimik Yapan Bölge) -->
-            <g id="mascotHeadGroup" class="cat-head-group">
+            <!-- SAĞ KOL MOD 6: Pati Yalama & Yüz Yıkama Jesti -->
+            <g id="catArmRightPawWash" class="cat-arm-right-pawwash" style="display:none;">
+              <path d="M 152 148 Q 172 130 156 102 Q 146 88 132 98 Q 124 106 130 118 Q 140 132 146 150 Z" fill="url(#catFurGrad)"/>
+              <circle cx="130" cy="102" r="8.5" fill="#FFA756" stroke="#D95B08" stroke-width="1.5"/>
+              <path d="M 125 99 Q 130 103 135 99" stroke="#B84407" stroke-width="2" fill="none"/>
+            </g>
+
+            <!-- 6. KAFA GRUBU (Okşama Bölgesi & 30 FPS Eğilip Bükülen Mimik Yapan Baş) -->
+            <g id="mascotHeadGroup" class="cat-head-group cat-head-part cat-interactive-part">
               
-              <!-- Kulaklar (Bağımsız Seğiren ve Dikilen Kulaklar) -->
-              <!-- Sol Kulak -->
+              <!-- Kulaklar -->
               <g id="catEarLeft" class="cat-ear-left">
                 <polygon points="62,75 36,18 88,48" fill="url(#catFurGrad)"/>
                 <polygon points="61,70 45,28 81,50" fill="#FFAB91"/>
               </g>
-              <!-- Sağ Kulak -->
               <g id="catEarRight" class="cat-ear-right">
                 <polygon points="158,75 184,18 132,48" fill="url(#catFurGrad)"/>
                 <polygon points="159,70 175,28 139,50" fill="#FFAB91"/>
@@ -243,7 +266,7 @@ class MascotController {
               <!-- Kafa Yuvarlağı & Yanaklar -->
               <path d="M 52 100 Q 45 74 70 58 Q 110 48 150 58 Q 175 74 168 100 Q 173 126 152 139 Q 110 153 68 139 Q 47 126 52 100 Z" fill="url(#catFurGrad)"/>
 
-              <!-- Alın Çizgileri (Tekir Kedi Karakteristik 3 Çizgi) -->
+              <!-- Alın Çizgileri -->
               <path d="M 110 56 L 110 81" stroke="#B84407" stroke-width="5.5" stroke-linecap="round"/>
               <path d="M 96 62 L 100 83" stroke="#B84407" stroke-width="4.5" stroke-linecap="round"/>
               <path d="M 124 62 L 120 83" stroke="#B84407" stroke-width="4.5" stroke-linecap="round"/>
@@ -299,22 +322,22 @@ class MascotController {
               <circle id="cheekLeft" class="cat-cheek" cx="66" cy="118" r="10" fill="#FF5252" opacity="0.35"/>
               <circle id="cheekRight" class="cat-cheek" cx="154" cy="118" r="10" fill="#FF5252" opacity="0.35"/>
 
-              <!-- Burun (Kedi Üçgen Burnu) -->
-              <polygon id="catNose" class="cat-nose" points="105,112 115,112 110,119" fill="#8D3208"/>
-
-              <!-- Bıyıklar -->
-              <g id="whiskersLeft" class="cat-whiskers-left">
-                <path d="M 56 114 L 93 117" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="M 54 122 L 94 121" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="M 58 130 L 94 125" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+              <!-- Burun & Bıyık Bölgesi (Dokunmatik Boop Noktası) -->
+              <g id="catNoseZone" class="cat-nose-part cat-interactive-part">
+                <polygon id="catNose" class="cat-nose" points="105,112 115,112 110,119" fill="#8D3208"/>
+                <g id="whiskersLeft" class="cat-whiskers-left">
+                  <path d="M 56 114 L 93 117" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M 54 122 L 94 121" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M 58 130 L 94 125" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+                </g>
+                <g id="whiskersRight" class="cat-whiskers-right">
+                  <path d="M 164 114 L 127 117" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M 166 122 L 126 121" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M 162 130 L 126 125" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
+                </g>
               </g>
-              <g id="whiskersRight" class="cat-whiskers-right">
-                <path d="M 164 114 L 127 117" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="M 166 122 L 126 121" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="M 162 130 L 126 125" stroke="#792803" stroke-width="2.2" stroke-linecap="round"/>
-              </g>
 
-              <!-- 8. AĞIZLAR (Kare Kare Mimik & Lip-Sync Seti) -->
+              <!-- 8. AĞIZLAR (Kare Kare Mimik & Lip-Sync & Esneme Seti) -->
               <!-- Durum A: Kapalı Tatlı Kedi Gülümsemesi (Idle) -->
               <path id="mouthClosed" d="M 97 122 Q 104 129 110 122 Q 116 129 123 122" stroke="#792803" stroke-width="3.2" fill="none" stroke-linecap="round"/>
 
@@ -334,7 +357,7 @@ class MascotController {
                 <path d="M 104 129 Q 110 134 116 129 Z" fill="#FF8A80"/>
               </g>
 
-              <!-- Durum E: Konuşan Tam Açık Neşeli Ağız (Speaking Frame 2) -->
+              <!-- Durum E: Konuşan Tam Açık Neşeli Ağız (Speaking Frame 2 / Gülme) -->
               <g id="mouthOpenWide" style="display:none;">
                 <path d="M 96 121 Q 110 145 124 121 Z" fill="#B71C1C" stroke="#792803" stroke-width="2.5"/>
                 <ellipse cx="110" cy="133" rx="7" ry="5" fill="#FF80AB"/>
@@ -348,6 +371,17 @@ class MascotController {
                 <ellipse cx="110" cy="128" rx="3.5" ry="4" fill="#FF80AB"/>
               </g>
 
+              <!-- Durum G: Mırıldanma / Mest Olmuş :3 Kedi Ağzı -->
+              <path id="mouthCatSmile" d="M 96 121 Q 103 130 110 123 Q 117 130 124 121" stroke="#792803" stroke-width="3.5" fill="none" stroke-linecap="round" style="display:none;"/>
+
+              <!-- Durum H: Sevimli Esneme Ağzı -->
+              <g id="mouthYawn" style="display:none;">
+                <path d="M 97 120 Q 110 148 123 120 Q 110 116 97 120 Z" fill="#880E4F" stroke="#792803" stroke-width="2.5"/>
+                <ellipse cx="110" cy="132" rx="6" ry="7" fill="#FF4081"/>
+                <polygon points="101,120 103,120 102,123" fill="#FFFFFF"/>
+                <polygon points="117,120 119,120 118,123" fill="#FFFFFF"/>
+              </g>
+
             </g>
           </g>
         </svg>
@@ -359,46 +393,230 @@ class MascotController {
       </div>
     `;
 
-    // Maskota dokununca sevimli gıdıklanma (wiggle), mutlu gözler ve neşeli ses
+    // ── AKILLI DOKUNMA YÖNETİMİ: Kafa vs Karın vs Burun vs Kuyruk ──
     const mascot = document.getElementById('mascotMain');
     if (mascot) {
-      const handleTickle = () => {
-        if (window.soundEngine && window.soundEngine.playReward) {
-          window.soundEngine.playReward();
-        }
-        this.wiggle();
-        this.triggerHappyEyes(950);
-
-        const studentName = (window.appInstance && window.appInstance.activeStudent && window.appInstance.activeStudent.name)
-          ? window.appInstance.activeStudent.name
-          : '';
-
-        const ticklePhrases = studentName
-          ? [
-              `Hihi, gıdıklandım ${studentName}! Hadi bana merak ettiğin bir soru sor! 🐱✨`,
-              `Miyavv, çok gıdıklandım ${studentName}! Bıyıklarım titredi! 🐾💛`,
-              `Hihihi! Patilerim gıdıklanıyor ${studentName}! Bugün ne keşfedelim? 🌟`
-            ]
-          : [
-              "Hihi, gıdıklandım tatlı kâşif! Hadi bana merak ettiğin bir soru sor! 🐱✨",
-              "Miyavv, çok gıdıklandım! Bıyıklarım titredi! 🐾💛",
-              "Hihihi! Patilerim gıdıklanıyor! Bugün ne keşfedelim? 🌟"
-            ];
-
-        const randomPhrase = ticklePhrases[Math.floor(Math.random() * ticklePhrases.length)];
-        this.sayTemporarily(randomPhrase, 4200);
+      const handleTouchOrClick = (e) => {
+        e.stopPropagation();
         this.resetIdleTimer();
+
+        const target = e.target;
+        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+
+        // 1. Burun veya Bıyıklar
+        if (target.closest('#catNoseZone') || target.closest('#catNose') || target.closest('#whiskersLeft') || target.closest('#whiskersRight')) {
+          this.triggerNoseBoop(clientX, clientY);
+          return;
+        }
+
+        // 2. Kafa ve Kulaklar (Okşama & Mırıldanma)
+        if (target.closest('#mascotHeadGroup') || target.closest('#catEarLeft') || target.closest('#catEarRight')) {
+          this.triggerHeadPet(clientX, clientY);
+          return;
+        }
+
+        // 3. Karın ve Gövde (Gıdıklanma)
+        if (target.closest('#mascotBody') || target.closest('#catBellyOval')) {
+          this.triggerBellyTickle(clientX, clientY);
+          return;
+        }
+
+        // 4. Kuyruk
+        if (target.closest('#mascotTailGroup')) {
+          this.triggerTailPlay(clientX, clientY);
+          return;
+        }
+
+        // 5. Genel Vücut Sevme
+        this.triggerGeneralPet(clientX, clientY);
       };
 
-      mascot.addEventListener('click', handleTickle);
-      mascot.addEventListener('touchstart', (e) => {
-        e.stopPropagation();
-        handleTickle();
-      }, { passive: true });
+      mascot.addEventListener('click', handleTouchOrClick);
+      mascot.addEventListener('touchstart', handleTouchOrClick, { passive: true });
     }
   }
 
-  // ── 30 FPS KARE KARE ÇİZGİ FİLM ANİMASYON MOTORU (Frame-by-Frame Loop) ──
+  // ── DOKUNMA TEPKİLERİ (BAŞ, KARIN, BURUN, KUYRUK) ───────────
+
+  // 1. Kafa Okşama & Mırıldanma (Head Petting & Purring)
+  triggerHeadPet(x, y) {
+    if (window.soundEngine) {
+      if (window.soundEngine.playCatMeow) window.soundEngine.playCatMeow();
+      else if (window.soundEngine.playReward) window.soundEngine.playReward();
+    }
+
+    this.isHappyPetActive = true;
+    this.activeHeadOverride = { rot: 8, y: -4 };
+
+    // Mest olmuş :3 gülümsemesi ve mutlu kısılan gözler
+    this.triggerHappyEyes(2400);
+    const mouthCatSmile = document.getElementById('mouthCatSmile');
+    const mouthClosed = document.getElementById('mouthClosed');
+    if (mouthCatSmile) mouthCatSmile.style.display = 'block';
+    if (mouthClosed) mouthClosed.style.display = 'none';
+
+    // Yanaklar pembeleşir
+    const cheekLeft = document.getElementById('cheekLeft');
+    const cheekRight = document.getElementById('cheekRight');
+    if (cheekLeft) cheekLeft.setAttribute('opacity', '0.75');
+    if (cheekRight) cheekRight.setAttribute('opacity', '0.75');
+
+    // Uçan kalpler ve mırıldanma simgeleri
+    this.spawnFloatingParticle(x, y, '💕');
+    setTimeout(() => this.spawnFloatingParticle(x + 18, y - 25, '✨'), 180);
+    setTimeout(() => this.spawnFloatingParticle(x - 18, y - 15, '😻'), 360);
+
+    const studentName = this.getActiveStudentName();
+    const purrPhrases = studentName
+      ? [
+          `Mırrrr... Başımı okşaman ne kadar tatlı ${studentName}! Çok mutlu oldum! 😻`,
+          `Miyavvv ${studentName}! Kafamı sevince kulaklarım bile neşeyle kıpırdıyor! 💕`,
+          `Mırrr mırrr... Seninle keşif yapmak dünyadaki en güzel şey ${studentName}! 🐾✨`
+        ]
+      : [
+          "Mırrrr... Başımı okşaman ne kadar tatlı! Çok mutlu oldum! 😻",
+          "Miyavvv! Kafamı sevince kulaklarım bile neşeyle kıpırdıyor! 💕",
+          "Mırrr mırrr... Seninle keşif yapmak dünyadaki en güzel şey! 🐾✨"
+        ];
+
+    const phrase = purrPhrases[Math.floor(Math.random() * purrPhrases.length)];
+    this.sayTemporarily(phrase, 3800);
+
+    setTimeout(() => {
+      this.isHappyPetActive = false;
+      this.activeHeadOverride = null;
+      if (mouthCatSmile) mouthCatSmile.style.display = 'none';
+      if (mouthClosed && this.state !== 'speaking' && this.state !== 'listening') mouthClosed.style.display = 'block';
+      if (cheekLeft) cheekLeft.setAttribute('opacity', '0.35');
+      if (cheekRight) cheekRight.setAttribute('opacity', '0.35');
+    }, 2400);
+  }
+
+  // 2. Karın Gıdıklama & Kahkaha (Belly Tickling & Laughing)
+  triggerBellyTickle(x, y) {
+    if (window.soundEngine && window.soundEngine.playPop) {
+      window.soundEngine.playPop();
+    }
+
+    this.wiggle();
+    this.triggerHappyEyes(1600);
+
+    const mouthOpenWide = document.getElementById('mouthOpenWide');
+    const mouthClosed = document.getElementById('mouthClosed');
+    if (mouthOpenWide) mouthOpenWide.style.display = 'block';
+    if (mouthClosed) mouthClosed.style.display = 'none';
+
+    this.spawnFloatingParticle(x, y, '😹');
+    setTimeout(() => this.spawnFloatingParticle(x + 20, y - 20, '🌟'), 160);
+    setTimeout(() => this.spawnFloatingParticle(x - 20, y - 10, '🎈'), 320);
+
+    const studentName = this.getActiveStudentName();
+    const ticklePhrases = studentName
+      ? [
+          `Hihihi! Göbeğim inanılmaz gıdıklanıyor ${studentName}, dur yapma! 😹`,
+          `Hihihihi! Patilerim titredi ${studentName}! Karnım en hassas keşif noktamdır! 🌟`,
+          `Miyavvv hihi! Gıdı gıdı yapma ${studentName}, gülmekten keşif yapamayacağım! 🎈`
+        ]
+      : [
+          "Hihihi! Göbeğim inanılmaz gıdıklanıyor, dur yapma! 😹",
+          "Hihihihi! Patilerim titredi! Karnım en hassas keşif noktamdır! 🌟",
+          "Miyavvv hihi! Gıdı gıdı yapma, gülmekten keşif yapamayacağım! 🎈"
+        ];
+
+    const phrase = ticklePhrases[Math.floor(Math.random() * ticklePhrases.length)];
+    this.sayTemporarily(phrase, 3600);
+
+    setTimeout(() => {
+      if (mouthOpenWide && this.state !== 'speaking' && this.state !== 'celebrating') mouthOpenWide.style.display = 'none';
+      if (mouthClosed && this.state === 'idle') mouthClosed.style.display = 'block';
+    }, 1600);
+  }
+
+  // 3. Burun Dokunma & Şakacı Hapşırma (Nose Boop & Sneeze)
+  triggerNoseBoop(x, y) {
+    if (window.soundEngine && window.soundEngine.playClick) {
+      window.soundEngine.playClick();
+    }
+
+    this.bounce();
+    this.spawnFloatingParticle(x, y, '💨');
+    setTimeout(() => this.spawnFloatingParticle(x + 10, y - 20, '✨'), 150);
+
+    const studentName = this.getActiveStudentName();
+    const boopPhrases = studentName
+      ? [
+          `Hapşuuu! 🐾 Bıyıklarım tozlandı galiba ${studentName}! Burnuma dokunman çok komikti! 😸`,
+          `Bip! Burnuma dokundun ${studentName}! Merak dedektörlerim yüzde yüz aktif! 💡✨`
+        ]
+      : [
+          "Hapşuuu! 🐾 Bıyıklarım tozlandı galiba! Burnuma dokunman çok komikti! 😸",
+          "Bip! Burnuma dokundun! Merak dedektörlerim yüzde yüz aktif! 💡✨"
+        ];
+
+    const phrase = boopPhrases[Math.floor(Math.random() * boopPhrases.length)];
+    this.sayTemporarily(phrase, 3500);
+  }
+
+  // 4. Kuyruk Oynatma (Tail Play)
+  triggerTailPlay(x, y) {
+    if (window.soundEngine && window.soundEngine.playSparkle) {
+      window.soundEngine.playSparkle();
+    }
+
+    const tail = document.getElementById('mascotTailGroup');
+    if (tail) {
+      tail.style.transition = 'transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+      tail.style.transform = 'rotate(26deg)';
+      setTimeout(() => {
+        if (tail) {
+          tail.style.transform = 'rotate(-18deg)';
+          setTimeout(() => { if (tail) tail.style.transition = ''; }, 300);
+        }
+      }, 300);
+    }
+
+    this.spawnFloatingParticle(x, y, '🐾');
+
+    const tailPhrases = [
+      "Aman kuyruğuma dikkat minik kâşif! O benim en tüylü pusulam! 🧭✨",
+      "Hihi! Kuyruğum sanki benden bağımsız dans ediyor! 🐾🎵"
+    ];
+    this.sayTemporarily(tailPhrases[Math.floor(Math.random() * tailPhrases.length)], 3200);
+  }
+
+  // 5. Genel Sevme
+  triggerGeneralPet(x, y) {
+    this.triggerHeadPet(x, y);
+  }
+
+  // Uçan Dokunmatik Parçacık Üret (Kalp, Yıldız, Nota)
+  spawnFloatingParticle(x, y, emoji = '✨') {
+    const wrapper = document.getElementById('mascotMain');
+    if (!wrapper) return;
+
+    const particle = document.createElement('span');
+    particle.className = 'mascot-touch-particle';
+    particle.innerText = emoji;
+
+    const rect = wrapper.getBoundingClientRect();
+    const posX = (x && x > 0) ? (x - rect.left) : (rect.width / 2);
+    const posY = (y && y > 0) ? (y - rect.top) : (rect.height / 2);
+
+    particle.style.left = `${posX}px`;
+    particle.style.top = `${posY}px`;
+
+    wrapper.appendChild(particle);
+    setTimeout(() => particle.remove(), 1200);
+  }
+
+  getActiveStudentName() {
+    return (window.appInstance && window.appInstance.activeStudent && window.appInstance.activeStudent.name)
+      ? window.appInstance.activeStudent.name
+      : '';
+  }
+
+  // ── 30 FPS KARE KARE ÇİZGİ FİLM ANİMASYON MOTORU (Frame Loop) ──
   start30FpsEngine() {
     this.stop30FpsEngine();
     this.frameCount = 0;
@@ -425,37 +643,50 @@ class MascotController {
   tick30Fps() {
     this.frameCount++;
 
-    // 1. KARE KARE 4-AŞAMALI GÖZ KIRPMA (Doğal Çizgi Film Kırpması)
+    // 1. KARE KARE GÖZ KIRPMA (4 Aşamalı Doğal Kırpma)
     this.updateBlinkFrame();
 
-    // 2. KARE KARE KUYRUK SALLANMASI
+    // 2. KARE KARE KUYRUK SALLANMASI (Tüm Durumlara Özel Hız/Açı)
     this.updateTailFrame();
 
-    // 3. KARE KARE NEFES & GÖVDE CANLILIĞI (Squash & Stretch)
+    // 3. KARE KARE NEFES & GÖVDE HACİM KORUNUMU (Squash & Stretch)
     this.updateBodyBreathingFrame();
 
-    // 4. KARE KARE KULAK SEĞİRMESİ
+    // 4. KARE KARE BİRLEŞİK BAŞ DÖNÜŞÜ & EĞİMİ (Tüm Durumlarda Çakışmasız)
+    this.updateHeadFrame();
+
+    // 5. KARE KARE KULAK SEĞİRMESİ
     this.updateEarTwitchFrame();
 
-    // 5. KARE KARE KONUŞMA AĞIZ SENKRONU & JESTLER (Speaking State)
+    // 6. KARE KARE KONUŞMA AĞIZ SENKRONU (Speaking State)
     if (this.state === 'speaking') {
       this.updateSpeakingMouthFrame();
     }
 
-    // 6. KARE KARE KUTLAMA VE ZAFER ZIPLAMASI (Celebrating State)
+    // 7. KARE KARE KUTLAMA VE ZAFER ZIPLAMASI (Celebrating State)
     if (this.state === 'celebrating') {
       this.updateCelebrationHopFrame();
     }
 
-    // 7. KARE KARE BAKIŞ VE GÖZ GEZDİRME (Idle State)
-    if (this.state === 'idle') {
+    // 8. DÜŞÜNME SIRASINDA ÇENE KAŞIMA & MERAKLI KAŞLAR (Thinking State)
+    if (this.state === 'thinking') {
+      this.updateThinkingFrame();
+    }
+
+    // 9. DİNLEME SIRASINDA KULAK KABARTMA (Listening State)
+    if (this.state === 'listening') {
+      this.updateListeningFrame();
+    }
+
+    // 10. KARE KARE BAKIŞ VE GÖZ GEZDİRME (Idle State)
+    if (this.state === 'idle' && !this.activeIdleMicroAnim) {
       this.updateIdleGazeFrame();
     }
   }
 
   // 1. Dört Aşamalı Kare Kare Göz Kırpma (Açık -> Yarım -> Tam Kapalı -> Yarım -> Açık)
   updateBlinkFrame() {
-    if (this.state === 'sleep') return;
+    if (this.state === 'sleep' || this.isHappyPetActive) return;
 
     const leftHalf = document.getElementById('mascotLeftLidHalf');
     const rightHalf = document.getElementById('mascotRightLidHalf');
@@ -464,7 +695,6 @@ class MascotController {
     const happyLeft = document.getElementById('happyEyeLeft');
     const happyRight = document.getElementById('happyEyeRight');
 
-    // Mutlu göz çizgileri ekrandaysa kırpma yapma
     if (happyLeft && happyLeft.style.display !== 'none') return;
 
     if (this.blinkPhase === 0) {
@@ -475,25 +705,21 @@ class MascotController {
     } else {
       const step = this.frameCount - this.blinkStartFrame;
       if (step === 1) {
-        // Kare 1: Yarım kapalı göz kapağı
         if (leftHalf) leftHalf.style.display = 'block';
         if (rightHalf) rightHalf.style.display = 'block';
         if (leftFull) leftFull.style.display = 'none';
         if (rightFull) rightFull.style.display = 'none';
       } else if (step === 2 || step === 3) {
-        // Kare 2-3: Tam kapalı göz kapağı
         if (leftHalf) leftHalf.style.display = 'none';
         if (rightHalf) rightHalf.style.display = 'none';
         if (leftFull) leftFull.style.display = 'block';
         if (rightFull) rightFull.style.display = 'block';
       } else if (step === 4) {
-        // Kare 4: Yarım açılıyor
         if (leftHalf) leftHalf.style.display = 'block';
         if (rightHalf) rightHalf.style.display = 'block';
         if (leftFull) leftFull.style.display = 'none';
         if (rightFull) rightFull.style.display = 'none';
       } else if (step >= 5) {
-        // Tamamen açık gözler
         if (leftHalf) leftHalf.style.display = 'none';
         if (rightHalf) rightHalf.style.display = 'none';
         if (leftFull) leftFull.style.display = 'none';
@@ -504,7 +730,7 @@ class MascotController {
     }
   }
 
-  // 2. 30 FPS Akıcı Kuyruk Sallanması (Duruma Göre Hız ve Salınım Değişir)
+  // 2. 30 FPS Akıcı Kuyruk Sallanması
   updateTailFrame() {
     const tail = document.getElementById('mascotTailGroup');
     if (!tail) return;
@@ -514,16 +740,16 @@ class MascotController {
 
     if (this.state === 'speaking') {
       baseFreq = 0.16;
-      baseAmp = 13;
+      baseAmp = 14;
     } else if (this.state === 'thinking') {
       baseFreq = 0.05;
       baseAmp = 6;
     } else if (this.state === 'listening') {
-      baseFreq = 0.12;
-      baseAmp = 14;
+      baseFreq = 0.13;
+      baseAmp = 15;
     } else if (this.state === 'celebrating') {
-      baseFreq = 0.22;
-      baseAmp = 20;
+      baseFreq = 0.24;
+      baseAmp = 22;
     }
 
     const angle = Math.sin(this.frameCount * baseFreq) * baseAmp;
@@ -534,33 +760,74 @@ class MascotController {
   // 3. 30 FPS Çizgi Film Hacim Koruma & Nefes (Squash & Stretch)
   updateBodyBreathingFrame() {
     const body = document.getElementById('mascotBody');
-    const head = document.getElementById('mascotHeadGroup');
-    if (!body || !head) return;
+    if (!body) return;
 
-    if (this.state === 'celebrating') return; // Kutlamada zıplama motoru kontrol eder
+    if (this.state === 'celebrating') return;
 
     const breathFreq = 0.055;
     const sinVal = Math.sin(this.frameCount * breathFreq);
     
-    // Çizgi film squash & stretch kuralı
     const scaleY = 1 + sinVal * 0.02;
     const scaleX = 1 - sinVal * 0.015;
     const transY = -sinVal * 2.5;
 
     body.style.transformOrigin = '110px 220px';
     body.style.transform = `matrix(${scaleX.toFixed(3)}, 0, 0, ${scaleY.toFixed(3)}, 0, ${transY.toFixed(1)})`;
-
-    // Kafa hafif gecikmeli (overlapping action) gövdeyi takip eder
-    const headSin = Math.sin((this.frameCount - 2) * breathFreq);
-    head.style.transformOrigin = '110px 145px';
-    head.style.transform = `translateY(${(-headSin * 1.8).toFixed(1)}px)`;
   }
 
-  // 4. Doğal Kulak Seğirmesi (Quick Alert Ear Twitch)
+  // 4. BİRLEŞİK BAŞ HAREKETİ VE EĞİMİ (Çakışma Hatası Çözüldü!)
+  updateHeadFrame() {
+    const head = document.getElementById('mascotHeadGroup');
+    if (!head) return;
+
+    const breathFreq = 0.055;
+    const headSin = Math.sin((this.frameCount - 2) * breathFreq);
+    let baseTransY = -headSin * 1.8;
+    let baseRot = 0;
+
+    if (this.state === 'speaking') {
+      const headRot = Math.sin(this.frameCount * 0.16) * 3.5;
+      const headY = Math.abs(Math.sin(this.frameCount * 0.22)) * -4.5;
+      baseTransY += headY;
+      baseRot += headRot;
+    } else if (this.state === 'listening') {
+      const tiltSin = Math.sin(this.frameCount * 0.07) * 3;
+      baseRot = 9 + tiltSin; // Merakla başını eğerek dinler
+      baseTransY -= 3;
+    } else if (this.state === 'thinking') {
+      const ponderSin = Math.sin(this.frameCount * 0.06) * 2;
+      baseRot = -7 + ponderSin; // Düşünce bulutuna yukarı bakar
+      baseTransY -= 5;
+    } else if (this.state === 'celebrating') {
+      const cheerRot = Math.sin(this.frameCount * 0.24) * 6;
+      baseRot = cheerRot;
+      baseTransY -= 4;
+    }
+
+    // Aktif özel kafa eğimi (Okşama, esneme vb.)
+    if (this.activeHeadOverride) {
+      baseRot += (this.activeHeadOverride.rot || 0);
+      baseTransY += (this.activeHeadOverride.y || 0);
+    }
+
+    head.style.transformOrigin = '110px 145px';
+    head.style.transform = `translateY(${baseTransY.toFixed(1)}px) rotate(${baseRot.toFixed(1)}deg)`;
+  }
+
+  // 5. Doğal Kulak Seğirmesi
   updateEarTwitchFrame() {
     const earLeft = document.getElementById('catEarLeft');
     const earRight = document.getElementById('catEarRight');
     if (!earLeft || !earRight) return;
+
+    if (this.state === 'listening') {
+      // Dinleme modunda kulaklar dikilir
+      earLeft.style.transformOrigin = '62px 75px';
+      earRight.style.transformOrigin = '158px 75px';
+      earLeft.style.transform = 'rotate(-4deg) scale(1.05)';
+      earRight.style.transform = 'rotate(6deg) scale(1.05)';
+      return;
+    }
 
     if (this.earTwitchPhase === 0) {
       if (this.frameCount >= this.nextEarTwitchFrame) {
@@ -588,14 +855,13 @@ class MascotController {
     }
   }
 
-  // 5. 30 FPS Konuşma Ağız Senkronu & Çizgi Film Jestleri
+  // 6. 30 FPS Konuşma Ağız Senkronu & Çizgi Film Jestleri
   updateSpeakingMouthFrame() {
     const mouthClosed = document.getElementById('mouthClosed');
     const mouthOpen = document.getElementById('mouthOpen');
     const mouthOpenWide = document.getElementById('mouthOpenWide');
     const mouthTalkO = document.getElementById('mouthTalkO');
 
-    // Her 4 karede bir (~7.5 fps) ağız şeklini çizgi film fonemlerine göre değiştir
     if (this.frameCount % 4 === 0) {
       this.speechMouthFrame = (this.speechMouthFrame + 1) % 6;
 
@@ -626,10 +892,9 @@ class MascotController {
       }
     }
 
-    // Kolların ve kafanın konuşma ritmi
+    // Kolların konuşma ritmi
     const armLeft = document.getElementById('catArmLeftSpeaking');
     const armRight = document.getElementById('catArmRightSpeaking');
-    const head = document.getElementById('mascotHeadGroup');
 
     if (armLeft) {
       const leftAngle = Math.sin(this.frameCount * 0.22) * 12;
@@ -641,15 +906,9 @@ class MascotController {
       armRight.style.transformOrigin = '152px 150px';
       armRight.style.transform = `rotate(${rightAngle.toFixed(1)}deg)`;
     }
-    if (head) {
-      const headRot = Math.sin(this.frameCount * 0.16) * 3;
-      const headY = Math.abs(Math.sin(this.frameCount * 0.22)) * -4;
-      head.style.transformOrigin = '110px 145px';
-      head.style.transform = `translateY(${headY.toFixed(1)}px) rotate(${headRot.toFixed(1)}deg)`;
-    }
   }
 
-  // 6. 30 FPS Kutlama Zıplaması & Zafer Patileri (Physics Hop)
+  // 7. 30 FPS Kutlama Zıplaması & Zafer Patileri (Physics Hop)
   updateCelebrationHopFrame() {
     const whole = document.getElementById('catWholeBody');
     const shadow = document.getElementById('mascotShadow');
@@ -658,17 +917,15 @@ class MascotController {
     if (!whole) return;
 
     const hopSin = Math.sin(this.frameCount * 0.24);
-    const hopY = -Math.abs(hopSin) * 32; // 32px yukarı sıçrama
+    const hopY = -Math.abs(hopSin) * 32;
 
     let scaleX = 1;
     let scaleY = 1;
 
     if (Math.abs(hopSin) < 0.2) {
-      // Yere iniş anı: squash
       scaleX = 1.12;
       scaleY = 0.88;
     } else {
-      // Havadayken: stretch
       scaleX = 0.94;
       scaleY = 1.08;
     }
@@ -676,7 +933,6 @@ class MascotController {
     whole.style.transformOrigin = '110px 260px';
     whole.style.transform = `translateY(${hopY.toFixed(1)}px) scale(${scaleX.toFixed(3)}, ${scaleY.toFixed(3)})`;
 
-    // Zemin gölgesi zıplayınca açılır
     if (shadow) {
       const shadowScale = 1 - (Math.abs(hopY) / 45);
       shadow.style.transformOrigin = '110px 265px';
@@ -684,20 +940,39 @@ class MascotController {
       shadow.style.opacity = `${(0.15 + shadowScale * 0.2).toFixed(2)}`;
     }
 
-    // Havada sallanan sevinç patileri
     if (armLeft) {
-      const armWave = Math.sin(this.frameCount * 0.3) * 15;
+      const armWave = Math.sin(this.frameCount * 0.3) * 16;
       armLeft.style.transformOrigin = '68px 145px';
       armLeft.style.transform = `rotate(${armWave.toFixed(1)}deg)`;
     }
     if (armRight) {
-      const armWave = -Math.cos(this.frameCount * 0.3) * 15;
+      const armWave = -Math.cos(this.frameCount * 0.3) * 16;
       armRight.style.transformOrigin = '152px 145px';
       armRight.style.transform = `rotate(${armWave.toFixed(1)}deg)`;
     }
   }
 
-  // 7. Doğal Göz Gezdirme (Idle Gaze Shift)
+  // 8. Düşünme Modunda 30 FPS Çene Kaşıma Hareketi
+  updateThinkingFrame() {
+    const armRight = document.getElementById('catArmRightThinking');
+    if (armRight) {
+      const scratch = Math.sin(this.frameCount * 0.28) * 4;
+      armRight.style.transformOrigin = '150px 155px';
+      armRight.style.transform = `translateY(${scratch.toFixed(1)}px) rotate(${scratch.toFixed(1)}deg)`;
+    }
+  }
+
+  // 9. Dinleme Modunda 30 FPS Kulak Kabartma
+  updateListeningFrame() {
+    const armRight = document.getElementById('catArmRightListening');
+    if (armRight) {
+      const pulse = Math.sin(this.frameCount * 0.12) * 3;
+      armRight.style.transformOrigin = '152px 150px';
+      armRight.style.transform = `rotate(${pulse.toFixed(1)}deg)`;
+    }
+  }
+
+  // 10. Doğal Göz Gezdirme (Idle Gaze Shift)
   updateIdleGazeFrame() {
     const pupilLeft = document.getElementById('pupilLeft');
     const pupilRight = document.getElementById('pupilRight');
@@ -719,6 +994,232 @@ class MascotController {
       pupilRight.setAttribute('cx', String(this.targetGaze.rx));
       pupilRight.setAttribute('cy', String(this.targetGaze.ry));
     }
+  }
+
+  // ── 15 SANİYE İŞLEMSİZ BEKLEME ANİMASYON DÖNGÜSÜ (6 ZENGİN MOD) ──
+  startIdleInactivityTracker() {
+    const reset = () => this.resetIdleTimer();
+    ['pointerdown', 'keydown', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, reset, { passive: true });
+    });
+    this.resetIdleTimer();
+  }
+
+  resetIdleTimer() {
+    if (this.idleInactivityTimer) {
+      clearTimeout(this.idleInactivityTimer);
+    }
+    this.idleInactivityTimer = setTimeout(() => {
+      this.triggerIdleMicroInteraction();
+    }, 15000); // 15 saniye sonra tetiklenir
+  }
+
+  triggerIdleMicroInteraction() {
+    if (this.state !== 'idle') {
+      this.resetIdleTimer();
+      return;
+    }
+
+    // 6 Farklı zengin bekleme animasyonu sırayla veya rastgele seçilir
+    const animMethods = [
+      () => this.idleAnimYawn(),
+      () => this.idleAnimPawWash(),
+      () => this.idleAnimPeekZoom(),
+      () => this.idleAnimSparkleTrack(),
+      () => this.idleAnimTailChase(),
+      () => this.idleAnimIdeaWave()
+    ];
+
+    const chosenAnim = animMethods[this.idleAnimIndex % animMethods.length];
+    this.idleAnimIndex++;
+    chosenAnim();
+
+    this.resetIdleTimer();
+  }
+
+  // Bekleme Modu 1: Büyük Esneme & Gerinme (Yawn & Stretch)
+  idleAnimYawn() {
+    const wrapper = document.getElementById('mascotMain');
+    const mouthYawn = document.getElementById('mouthYawn');
+    const mouthClosed = document.getElementById('mouthClosed');
+    const armLeft = document.getElementById('catArmLeftCelebration');
+    const armRight = document.getElementById('catArmRightCelebration');
+    const armLeftNorm = document.getElementById('catArmLeftNormal');
+    const armRightNorm = document.getElementById('catArmRightNormal');
+
+    this.activeIdleMicroAnim = 'yawn';
+    this.triggerHappyEyes(3500);
+
+    if (wrapper) wrapper.classList.add('mascot-yawn-stretch');
+    if (mouthYawn) mouthYawn.style.display = 'block';
+    if (mouthClosed) mouthClosed.style.display = 'none';
+
+    if (armLeftNorm) armLeftNorm.style.display = 'none';
+    if (armRightNorm) armRightNorm.style.display = 'none';
+    if (armLeft) armLeft.style.display = 'block';
+    if (armRight) armRight.style.display = 'block';
+
+    this.spawnFloatingParticle(145, 90, '🥱');
+    setTimeout(() => this.spawnFloatingParticle(155, 60, '💤'), 600);
+
+    this.sayTemporarily("Huuuv... Şöyle tatlı bir esneyelim! Merak etme, yeni bir keşif sorusu için zımba gibiyim! 🥱✨", 4000);
+
+    setTimeout(() => {
+      if (wrapper) wrapper.classList.remove('mascot-yawn-stretch');
+      if (mouthYawn) mouthYawn.style.display = 'none';
+      if (mouthClosed && this.state === 'idle') mouthClosed.style.display = 'block';
+      if (armLeft) armLeft.style.display = 'none';
+      if (armRight) armRight.style.display = 'none';
+      if (armLeftNorm && this.state === 'idle') armLeftNorm.style.display = 'block';
+      if (armRightNorm && this.state === 'idle') armRightNorm.style.display = 'block';
+      this.activeIdleMicroAnim = null;
+    }, 3500);
+  }
+
+  // Bekleme Modu 2: Pati Yalama & Yüz Yıkama (Paw Licking & Grooming)
+  idleAnimPawWash() {
+    const armWash = document.getElementById('catArmRightPawWash');
+    const armNorm = document.getElementById('catArmRightNormal');
+    const mouthCatSmile = document.getElementById('mouthCatSmile');
+    const mouthClosed = document.getElementById('mouthClosed');
+
+    this.activeIdleMicroAnim = 'pawWash';
+    this.activeHeadOverride = { rot: 10, y: -2 };
+
+    if (armNorm) armNorm.style.display = 'none';
+    if (armWash) armWash.style.display = 'block';
+    if (mouthCatSmile) mouthCatSmile.style.display = 'block';
+    if (mouthClosed) mouthClosed.style.display = 'none';
+
+    this.spawnFloatingParticle(140, 110, '🧼');
+    setTimeout(() => this.spawnFloatingParticle(155, 90, '✨'), 400);
+
+    if (window.soundEngine && window.soundEngine.playSparkle) {
+      window.soundEngine.playSparkle();
+    }
+
+    this.sayTemporarily("Miyav... Keşfe çıkmadan önce patilerimi ve bıyıklarımı tertemiz yapmalıyım! Pırıl pırıl oldum! 🧼🐾", 3800);
+
+    setTimeout(() => {
+      if (armWash) armWash.style.display = 'none';
+      if (armNorm && this.state === 'idle') armNorm.style.display = 'block';
+      if (mouthCatSmile) mouthCatSmile.style.display = 'none';
+      if (mouthClosed && this.state === 'idle') mouthClosed.style.display = 'block';
+      this.activeHeadOverride = null;
+      this.activeIdleMicroAnim = null;
+    }, 3400);
+  }
+
+  // Bekleme Modu 3: Merakla Ekrana Yaklaşma (Curious Peek Zoom)
+  idleAnimPeekZoom() {
+    const wrapper = document.getElementById('mascotMain');
+    const pupilLeft = document.getElementById('pupilLeft');
+    const pupilRight = document.getElementById('pupilRight');
+
+    this.activeIdleMicroAnim = 'peekZoom';
+    if (wrapper) wrapper.classList.add('mascot-curious-zoom');
+
+    if (pupilLeft && pupilRight) {
+      pupilLeft.setAttribute('rx', '10.5');
+      pupilLeft.setAttribute('ry', '15.5');
+      pupilRight.setAttribute('rx', '10.5');
+      pupilRight.setAttribute('ry', '15.5');
+    }
+
+    this.spawnFloatingParticle(145, 70, '🔍');
+
+    this.sayTemporarily("Pışt! Orada mısın minik kâşif? Acaba aklında nasıl harika bir soru var? Hadi bana bir ipucu ver! 🔍👀", 3800);
+
+    setTimeout(() => {
+      if (wrapper) wrapper.classList.remove('mascot-curious-zoom');
+      if (pupilLeft && pupilRight) {
+        pupilLeft.setAttribute('rx', '8.5');
+        pupilLeft.setAttribute('ry', '14');
+        pupilRight.setAttribute('rx', '8.5');
+        pupilRight.setAttribute('ry', '14');
+      }
+      this.activeIdleMicroAnim = null;
+    }, 3600);
+  }
+
+  // Bekleme Modu 4: Uçan Işıltıyı Merakla Takip Etme (Sparkle Track)
+  idleAnimSparkleTrack() {
+    const pupilLeft = document.getElementById('pupilLeft');
+    const pupilRight = document.getElementById('pupilRight');
+
+    this.activeIdleMicroAnim = 'sparkleTrack';
+    this.spawnFloatingParticle(70, 60, '✨');
+    setTimeout(() => this.spawnFloatingParticle(140, 40, '🦋'), 700);
+    setTimeout(() => this.spawnFloatingParticle(190, 80, '✨'), 1400);
+
+    // Gözleri sağa sola ışıltı takibine yönlendir
+    if (pupilLeft && pupilRight) {
+      pupilLeft.setAttribute('cx', '82');
+      pupilLeft.setAttribute('cy', '94');
+      pupilRight.setAttribute('cx', '128');
+      pupilRight.setAttribute('cy', '94');
+
+      setTimeout(() => {
+        pupilLeft.setAttribute('cx', '92');
+        pupilLeft.setAttribute('cy', '92');
+        pupilRight.setAttribute('cx', '138');
+        pupilRight.setAttribute('cy', '92');
+      }, 900);
+    }
+
+    if (window.soundEngine && window.soundEngine.playSparkle) {
+      window.soundEngine.playSparkle();
+    }
+
+    this.sayTemporarily("Aaa, o da neydi öyle? Uçan bir merak kıvılcımı mı gördüm acaba? Yakalayamadım! ✨🐾", 3600);
+
+    setTimeout(() => {
+      this.activeIdleMicroAnim = null;
+    }, 3400);
+  }
+
+  // Bekleme Modu 5: Kuyruk Kovalamaca & Neşeli Dönüş (Tail Chase)
+  idleAnimTailChase() {
+    const wrapper = document.getElementById('mascotMain');
+    this.activeIdleMicroAnim = 'tailChase';
+
+    if (wrapper) wrapper.classList.add('mascot-tail-chase');
+    this.spawnFloatingParticle(180, 160, '🌀');
+
+    this.sayTemporarily("Miyavv! Kuyruğum bugün çok neşeli, peşimden hiç ayrılmıyor! Sen de merak ettiğin bir şeyi sorsana! 🌀🐱", 3600);
+
+    setTimeout(() => {
+      if (wrapper) wrapper.classList.remove('mascot-tail-chase');
+      this.activeIdleMicroAnim = null;
+    }, 3200);
+  }
+
+  // Bekleme Modu 6: Düşünce Sandığı ve El Sallama (Idea Wave)
+  idleAnimIdeaWave() {
+    const armWave = document.getElementById('catArmRightSpeaking');
+    const armNorm = document.getElementById('catArmRightNormal');
+    const bulb = document.getElementById('mascotBulb');
+
+    this.activeIdleMicroAnim = 'ideaWave';
+    if (armNorm) armNorm.style.display = 'none';
+    if (armWave) armWave.style.display = 'block';
+    if (bulb) bulb.style.display = 'flex';
+
+    this.spawnFloatingParticle(145, 50, '💡');
+    setTimeout(() => this.spawnFloatingParticle(165, 40, '🎈'), 400);
+
+    if (window.soundEngine && window.soundEngine.playReward) {
+      window.soundEngine.playReward();
+    }
+
+    this.sayTemporarily("Seni beklerken düşünce sandığıma harika fikirler biriktirdim! Bugün dünyayı mı uzayı mı keşfedelim? 💡🎈", 3800);
+
+    setTimeout(() => {
+      if (armWave) armWave.style.display = 'none';
+      if (armNorm && this.state === 'idle') armNorm.style.display = 'block';
+      if (bulb) bulb.style.display = 'none';
+      this.activeIdleMicroAnim = null;
+    }, 3500);
   }
 
   // Başarı, Doğru Cevap veya Rozet Kutlama Hareketi
@@ -760,6 +1261,8 @@ class MascotController {
     const mouthOpen = document.getElementById('mouthOpen');
     const mouthOpenWide = document.getElementById('mouthOpenWide');
     const mouthTalkO = document.getElementById('mouthTalkO');
+    const mouthCatSmile = document.getElementById('mouthCatSmile');
+    const mouthYawn = document.getElementById('mouthYawn');
 
     const armLeftNormal = document.getElementById('catArmLeftNormal');
     const armLeftSpeaking = document.getElementById('catArmLeftSpeaking');
@@ -770,6 +1273,7 @@ class MascotController {
     const armRightListening = document.getElementById('catArmRightListening');
     const armRightSpeaking = document.getElementById('catArmRightSpeaking');
     const armRightCelebration = document.getElementById('catArmRightCelebration');
+    const armRightPawWash = document.getElementById('catArmRightPawWash');
 
     const pupilLeft = document.getElementById('pupilLeft');
     const pupilRight = document.getElementById('pupilRight');
@@ -797,6 +1301,7 @@ class MascotController {
     if (armRightListening) armRightListening.style.display = 'none';
     if (armRightSpeaking) armRightSpeaking.style.display = 'none';
     if (armRightCelebration) armRightCelebration.style.display = 'none';
+    if (armRightPawWash) armRightPawWash.style.display = 'none';
 
     // Göz Bebeklerini Merkeze ve Normal Boyuta Al
     if (pupilLeft && pupilRight) {
@@ -822,6 +1327,8 @@ class MascotController {
     if (mouthTalkO) mouthTalkO.style.display = 'none';
     if (mouthThink) mouthThink.style.display = 'none';
     if (mouthListen) mouthListen.style.display = 'none';
+    if (mouthCatSmile) mouthCatSmile.style.display = 'none';
+    if (mouthYawn) mouthYawn.style.display = 'none';
     if (mouthClosed) mouthClosed.style.display = 'block';
 
     // ── 1. DÜŞÜNME MODU (Thinking) ───────────────────────────
@@ -1090,52 +1597,6 @@ class MascotController {
     }
   }
 
-  // 15 Saniye İşlemsiz Kalındığında Canlılık Takibi
-  startIdleInactivityTracker() {
-    const reset = () => this.resetIdleTimer();
-    ['pointerdown', 'keydown', 'touchstart'].forEach(evt => {
-      window.addEventListener(evt, reset, { passive: true });
-    });
-    this.resetIdleTimer();
-  }
-
-  resetIdleTimer() {
-    if (this.idleInactivityTimer) {
-      clearTimeout(this.idleInactivityTimer);
-    }
-    this.idleInactivityTimer = setTimeout(() => {
-      this.triggerIdleMicroInteraction();
-    }, 15000);
-  }
-
-  triggerIdleMicroInteraction() {
-    if (this.state === 'idle') {
-      const whole = document.getElementById('catWholeBody');
-      if (whole) {
-        whole.classList.remove('mascot-idle-nudge', 'mascot-bounce', 'mascot-wiggle');
-        void whole.offsetWidth;
-        whole.classList.add('mascot-idle-nudge');
-        setTimeout(() => whole.classList.remove('mascot-idle-nudge'), 1250);
-      }
-
-      // Meraklı Göz Kırpma
-      this.blinkPhase = 1;
-      this.blinkStartFrame = this.frameCount;
-
-      // Canlı Kuyruk Sallanması
-      const tail = document.getElementById('mascotTailGroup');
-      if (tail) {
-        tail.style.transition = 'transform 0.4s ease';
-        tail.style.transform = 'rotate(-10deg)';
-        setTimeout(() => {
-          if (tail) tail.style.transform = 'rotate(0deg)';
-        }, 650);
-      }
-    }
-
-    this.resetIdleTimer();
-  }
-
   sayTemporarily(text, durationMs = 4000) {
     const statusText = document.getElementById('mascotStatusText');
     if (statusText) {
@@ -1268,7 +1729,7 @@ class MascotController {
     }, waitTime);
   }
 
-  // Uyumluluk Metotları (Geriye Dönük Güvenlik)
+  // Uyumluluk Metotları
   startLipSync() {}
   stopLipSync() {}
   startIdleAnimations() {}
