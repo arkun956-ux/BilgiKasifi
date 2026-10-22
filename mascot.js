@@ -8,7 +8,7 @@ class MascotController {
     this.container = document.getElementById(containerId);
     this.bubbleContainer = document.getElementById(bubbleContainerId);
     this.state = 'idle'; // idle | listening | thinking | speaking | celebrating
-    this.mascotMode = localStorage.getItem('bilgi_kasifi_mascot_mode') || 'model'; // 'model' (3D AI Üretimi) veya 'vector' (SVG)
+    this.mascotMode = localStorage.getItem('bilgi_kasifi_mascot_mode') || 'model'; // 'model' (2D Çizgi Film) veya 'vector' (SVG)
     this.poppedBubblesCount = 0;
     this.bubbleInterval = null;
     this.speechInterval = null;
@@ -41,9 +41,9 @@ class MascotController {
     const isModelMode = this.mascotMode === 'model';
 
     this.container.innerHTML = `
-      <!-- Maskot Görünüm Seçici (3D Model / Vektör) -->
+      <!-- Maskot Görünüm Seçici (Çizgi Film / Vektör) -->
       <div class="mascot-mode-toggle" id="mascotModeToggle">
-        <button type="button" class="mode-pill ${isModelMode ? 'active' : ''}" id="btnModelMascot" title="3D Yapay Zekâ Model Maskotu">🎨 3D Model</button>
+        <button type="button" class="mode-pill ${isModelMode ? 'active' : ''}" id="btnModelMascot" title="2D Çizgi Film Animasyon Maskotu">🎬 Çizgi Film</button>
         <button type="button" class="mode-pill ${!isModelMode ? 'active' : ''}" id="btnVectorMascot" title="Vektör Çizim Maskot">✏️ Vektör</button>
       </div>
 
